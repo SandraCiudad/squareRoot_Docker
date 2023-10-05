@@ -127,6 +127,7 @@ pipeline {
                         // Run Valgrind
                         dir("${env.WORKSPACE}/build") {
                             sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                            junit 'test_detail.xml'
                         }
                     }
                 }
@@ -148,11 +149,9 @@ pipeline {
             
             steps {
 
-                dir("${env.WORKSPACE}.") 
+                dir("${env.WORKSPACE}/build") 
                 {
-                    dir('build'){
-                        junit 'test_detail.xml'
-                    }
+                    
                     //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
                 }
             }
