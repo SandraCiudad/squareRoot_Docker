@@ -125,8 +125,8 @@ pipeline {
                         sh '''mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
 
                         // Run Valgrind
-                        dir("${env.WORKSPACE}./build") {
-                            sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../../../../../reports/project_valgrind.xml ./executeTests --gtest_filter=TEST_API.TEST_1:TEST_API.TEST_2'''
+                        dir("${env.WORKSPACE}/build") {
+                            sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../../../../../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                         }
                     }
                 }
