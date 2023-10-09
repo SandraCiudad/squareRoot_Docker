@@ -184,14 +184,14 @@ pipeline {
                     xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
 
-                dir("${env.WORKSPACE}/reports") {
+                /*dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
                         failThresholdDefinitelyLost: '',
                         failThresholdInvalidReadWrite: '',
                         failThresholdTotal: '',
-                        pattern: '/reports/*valgrind.xml',
+                        pattern: '*valgrind.xml',
                         publishResultsForAbortedBuilds: true,
                         publishResultsForFailedBuilds: true,
                         sourceSubstitutionPaths: '',
@@ -199,7 +199,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
             }
 
