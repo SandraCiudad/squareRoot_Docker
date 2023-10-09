@@ -12,7 +12,6 @@ pipeline {
         ANALYSIS_DOCKER_IMAGE = 'debian_cppcheck:9.1'
         // The following docker image is used for the tests
         GMV_DOCKER_IMAGE = 'docker-tnb:20221003'
-        //DOCKER_ARGS = '--rm -u root' //-u root es para dar permisos
         DOCKER_ARGS = '--rm -u root' //-u root es para dar permisos
         ARTIFACT = 'libProject'
         ARTIFACT_TEST = 'PROJECT'
@@ -129,7 +128,7 @@ pipeline {
                         dir("${env.WORKSPACE}/build") {
                             sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
-                        //sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                     }
 
                     //REPORTS
@@ -137,7 +136,7 @@ pipeline {
 
                         //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
-                        recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+                        //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                         publishHTML([allowMissing: false, 
                                     alwaysLinkToLastBuild: true, 
