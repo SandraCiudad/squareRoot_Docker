@@ -156,6 +156,7 @@ pipeline {
 
                 dir("${env.WORKSPACE}/build") 
                 {
+                    sh './executeTests --gtest_output=xml'
                     junit 'test_detail.xml'
                     //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
                 }
@@ -207,8 +208,6 @@ pipeline {
                         unstableThresholdTotal: ''
                     )
                 }
-
-                junit 'junitTestBasicMathResults.xml'
 
             }
 
