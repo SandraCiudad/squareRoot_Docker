@@ -131,49 +131,6 @@ pipeline {
                         sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                     }
 
-                    //REPORTS
-                    dir("${env.WORKSPACE}") {
-
-                        //publishCppcheck pattern: "reports/project_cppcheck.xml"
-
-                        //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
-
-                        publishHTML([allowMissing: false, 
-                                    alwaysLinkToLastBuild: true, 
-                                    keepAll: true, 
-                                    reportDir: 'reports/cccc', 
-                                    reportFiles: 'index.html', 
-                                    reportName: 'CCCC Report', 
-                                    reportTitles: 'The CCCC report'])
-
-                        publishHTML([allowMissing: false, 
-                                    alwaysLinkToLastBuild: true, 
-                                    keepAll: true, 
-                                    reportDir: 'reports/doxygen/html', 
-                                    reportFiles: 'index.html', 
-                                    reportName: 'Doxygen Report', 
-                                    reportTitles: 'Doxygen Report'])
-                        
-                        //xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
-                    }
-
-                    dir("${env.WORKSPACE}/reports") {
-                        publishValgrind (
-                            failBuildOnInvalidReports: true,
-                            failBuildOnMissingReports: true,
-                            failThresholdDefinitelyLost: '',
-                            failThresholdInvalidReadWrite: '',
-                            failThresholdTotal: '',
-                            pattern: '*valgrind.xml',
-                            publishResultsForAbortedBuilds: true,
-                            publishResultsForFailedBuilds: true,
-                            sourceSubstitutionPaths: '',
-                            unstableThresholdDefinitelyLost: '',
-                            unstableThresholdInvalidReadWrite: '',
-                            unstableThresholdTotal: ''
-                        )
-                    }
-
                 }
             }
 
