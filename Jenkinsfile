@@ -145,8 +145,6 @@ pipeline {
                     reuseNode true
                 }
             }
-
-            agent any
             
             steps {
 
