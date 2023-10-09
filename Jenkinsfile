@@ -12,7 +12,7 @@ pipeline {
         ANALYSIS_DOCKER_IMAGE = 'debian_cppcheck:9.1'
         // The following docker image is used for the tests
         GMV_DOCKER_IMAGE = 'docker-tnb:20221003'
-        DOCKER_ARGS = '--rm -u root' //-u root es para dar permisos
+        DOCKER_ARGS = '-u root' //-u root es para dar permisos
         ARTIFACT = 'libProject'
         ARTIFACT_TEST = 'PROJECT'
 
@@ -113,7 +113,7 @@ pipeline {
                         script {
 
                             try {
-                                sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC/src --format xml 1> reports/project_cpd.xml"
+                                sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
                             }
                             catch(e)
                             {
@@ -126,10 +126,11 @@ pipeline {
 
                         // Run Valgrind
                         dir("${env.WORKSPACE}/build") {
-                            sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
-                            junit 'test_detail.xml'
+                            sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
+                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                     }
+
                 }
             }
 
@@ -151,7 +152,8 @@ pipeline {
 
                 dir("${env.WORKSPACE}/build") 
                 {
-                    
+                    sh './executeTests --gtest_output=xml'
+                    //junit 'test_detail.xml'
                     //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
                 }
             }
@@ -202,8 +204,6 @@ pipeline {
                         unstableThresholdTotal: ''
                     )
                 }
-
-                junit 'junitTestBasicMathResults.xml'
 
             }
 
