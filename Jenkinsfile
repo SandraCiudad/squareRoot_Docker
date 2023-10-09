@@ -100,46 +100,80 @@ pipeline {
                 
                 script {
                     dir("${env.WORKSPACE}") {
-                        try{
-                            sh '''rm -rf reports/cccc'''
-                            sh '''rm -rf reports/doxygen'''
 
-                            // CPPCheck Code Analysis
-                            sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+                        sh '''rm -rf reports/cccc'''
+                        sh '''rm -rf reports/doxygen'''
 
-                            // CCCC Code Analysis
-                            sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+                        // CPPCheck Code Analysis
+                        sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
 
-                            script {
+                        // CCCC Code Analysis
+                        sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
 
-                                try {
-                                    sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC/src --format xml 1> reports/project_cpd.xml"
-                                }
-                                catch(e)
-                                {
-                                    currentBuild.result = 'SUCCESS'
-                                }
+                        script {
+
+                            try {
+                                sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
                             }
-                            
-                            // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
-                            sh '''mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
-
-                            // Run Valgrind
-                            dir("${env.WORKSPACE}/build") {
-                                sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
-                            }
-                            sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
-                            dir("${env.WORKSPACE}/build") 
+                            catch(e)
                             {
-                                sh './executeTests --gtest_output=xml'
-                                junit 'test_detail.xml'
-                                //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
+                                currentBuild.result = 'SUCCESS'
                             }
-                        } catch(e){
-                            currentBuild.result = 'SUCCESS'
                         }
                         
+                        // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
+                        sh '''mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
+
+                        // Run Valgrind
+                        dir("${env.WORKSPACE}/build") {
+                            sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                        }
+                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                     }
+
+                    //REPORTS
+                    dir("${env.WORKSPACE}") {
+
+                        publishCppcheck pattern: "reports/project_cppcheck.xml"
+
+                        recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+
+                        publishHTML([allowMissing: false, 
+                                    alwaysLinkToLastBuild: true, 
+                                    keepAll: true, 
+                                    reportDir: 'reports/cccc', 
+                                    reportFiles: 'index.html', 
+                                    reportName: 'CCCC Report', 
+                                    reportTitles: 'The CCCC report'])
+
+                        publishHTML([allowMissing: false, 
+                                    alwaysLinkToLastBuild: true, 
+                                    keepAll: true, 
+                                    reportDir: 'reports/doxygen/html', 
+                                    reportFiles: 'index.html', 
+                                    reportName: 'Doxygen Report', 
+                                    reportTitles: 'Doxygen Report'])
+                        
+                        xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
+                    }
+
+                    dir("${env.WORKSPACE}/reports") {
+                        publishValgrind (
+                            failBuildOnInvalidReports: true,
+                            failBuildOnMissingReports: true,
+                            failThresholdDefinitelyLost: '',
+                            failThresholdInvalidReadWrite: '',
+                            failThresholdTotal: '',
+                            pattern: '*valgrind.xml',
+                            publishResultsForAbortedBuilds: true,
+                            publishResultsForFailedBuilds: true,
+                            sourceSubstitutionPaths: '',
+                            unstableThresholdDefinitelyLost: '',
+                            unstableThresholdInvalidReadWrite: '',
+                            unstableThresholdTotal: ''
+                        )
+                    }
+
                 }
             }
 
@@ -162,7 +196,7 @@ pipeline {
                 dir("${env.WORKSPACE}/build") 
                 {
                     sh './executeTests --gtest_output=xml'
-                    junit 'test_detail.xml'
+                    //junit 'test_detail.xml'
                     //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
                 }
             }
