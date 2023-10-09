@@ -150,7 +150,7 @@ pipeline {
             
             steps {
 
-                dir("${env.WORKSPACE}/build") 
+                dir("${env.WORKSPACE}") 
                 {
                     sh './executeTests --gtest_output=xml'
                     //junit 'test_detail.xml'
