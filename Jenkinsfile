@@ -125,7 +125,7 @@ pipeline {
                         sh '''mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
 
                         // Run Valgrind
-                        dir("${env.WORKSPACE}/build") {
+                        dir("${env.WORKSPACE}") {
                             sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                             junit 'test_detail.xml'
                         }
