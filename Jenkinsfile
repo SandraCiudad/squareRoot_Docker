@@ -129,6 +129,12 @@ pipeline {
                             sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
                         sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                        dir("${env.WORKSPACE}/build") 
+                        {
+                            sh './executeTests --gtest_output=xml'
+                            junit 'test_detail.xml'
+                            //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
+                        }
                     }
                 }
             }
