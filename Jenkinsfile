@@ -151,8 +151,6 @@ pipeline {
                 dir("${env.WORKSPACE}") 
                 {
                     sh './executeTests --gtest_output=xml'
-                    //junit 'test_detail.xml'
-                    //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
                 }
             }
         } // Stage Tests
@@ -193,7 +191,7 @@ pipeline {
                         failThresholdDefinitelyLost: '',
                         failThresholdInvalidReadWrite: '',
                         failThresholdTotal: '',
-                        pattern: '*valgrind.xml',
+                        pattern: '/reports/*valgrind.xml',
                         publishResultsForAbortedBuilds: true,
                         publishResultsForFailedBuilds: true,
                         sourceSubstitutionPaths: '',
