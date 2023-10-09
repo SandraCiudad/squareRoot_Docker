@@ -151,12 +151,13 @@ pipeline {
             
             steps {
 
-                /*dir("${env.WORKSPACE}") 
+                dir("${env.WORKSPACE}") 
                 {
-                    sh './executeTests --gtest_output=xml'
+                    echo 'tests...'
+                    //sh './executeTests --gtest_output=xml'
                     //junit 'test_detail.xml'
                     //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
-                }*/
+                }
             }
         } // Stage Tests
         
