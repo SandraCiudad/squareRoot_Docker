@@ -183,7 +183,7 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
+                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
 
                 dir("${env.WORKSPACE}/reports") {
