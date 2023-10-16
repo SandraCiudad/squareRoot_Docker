@@ -90,8 +90,8 @@ pipeline {
                 script {
                     def imageName = 'debian_cppcheck:9.1'
                     def registryCredentials = [
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_SSH_conection', variable: 'USERNAME'],
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_SSH_conection', variable: 'PASSWORD']
+                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'standard_credentials', variable: 'USERNAME'],
+                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'standard_credentials', variable: 'PASSWORD']
                     ]
                     
                     withCredentials(registryCredentials) {
@@ -102,7 +102,7 @@ pipeline {
             }
         }
 
-         stage('Ejecutar en Docker Remoto') {
+        /*stage('Ejecutar en Docker Remoto') {
             steps {
                 script {
                     def remoteDocker = [:]
@@ -115,7 +115,7 @@ pipeline {
                     remoteDocker.run()
                 }
             }
-        }
+        }*/
 
         /*stage('Run docker container on remote host'){
             agent any
