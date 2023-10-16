@@ -9,7 +9,7 @@ pipeline {
     
     environment {
         DOCKER_IMAGE = 'xsdk:j2.0'
-        ANALYSIS_DOCKER_IMAGE = 'debian_cppcheck:9.1'
+        ANALYSIS_DOCKER_IMAGE = 'ssh ci@192.168.29.79 debian_cppcheck:9.1'
         // The following docker image is used for the tests
         GMV_DOCKER_IMAGE = 'docker-tnb:20221003'
         DOCKER_ARGS = '-u root' //-u root es para dar permisos
