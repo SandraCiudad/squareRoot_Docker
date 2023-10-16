@@ -78,7 +78,7 @@ pipeline {
                         archiveArtifacts artifacts: "${TEST_SWR}/Debug_PC/${ARTIFACT_TEST}", followSymlinks: false, onlyIfSuccessful: true
                         */
 
-                        sh 'make || true'
+                        //sh 'make || true'
 
                     }
                 }
