@@ -8,10 +8,10 @@ pipeline {
     }*/
     
     environment {
-        DOCKER_IMAGE = 'xsdk:j2.0'
+        //DOCKER_IMAGE = 'xsdk:j2.0'
         ANALYSIS_DOCKER_IMAGE = 'debian_cppcheck:9.1'
         // The following docker image is used for the tests
-        GMV_DOCKER_IMAGE = 'docker-tnb:20221003'
+        //GMV_DOCKER_IMAGE = 'docker-tnb:20221003'
         DOCKER_ARGS = '-u root' //-u root es para dar permisos
         ARTIFACT = 'libProject'
         ARTIFACT_TEST = 'PROJECT'
@@ -85,34 +85,22 @@ pipeline {
             }
         } // Stage Build
 
-        /*stage('Load Remote Docker Image') {
+        stage('Docker configuration') {
             steps {
-                script {
-                    def imageName = 'debian_cppcheck:9.1'
-                    def registryCredentials = [
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'standard_credentials', variable: 'USERNAME'],
-                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'standard_credentials', variable: 'PASSWORD']
-                    ]
-                    
-                    withCredentials(registryCredentials) {
-                        sh "docker login -u \$USERNAME -p \$PASSWORD"
-                        sh "docker pull $imageName"
+                steps {
+                    script {
+                        // Define la imagen de Docker que se utilizará
+                        def dockerImage = 'debian_cppcheck:9.1'
+                        
+                        // Utiliza la directiva 'docker' para configurar el entorno de ejecución
+                        docker {
+                            image dockerImage  // Especifica la imagen de Docker
+                            args '-u root'      // Opcional: Agrega argumentos adicionales al contenedor Docker
+                        }
+                        
+                        // Realiza acciones dentro del contenedor Docker
+                        sh 'ls'  // Ejemplo: ejecuta comandos de construcción dentro del contenedor
                     }
-                }
-            }
-        }*/
-
-        stage('Ejecutar en Docker Remoto') {
-            steps {
-                script {
-                    def remoteDocker = [:]
-                    remoteDocker.image = 'debian_cppcheck:9.1'
-                    remoteDocker.imagePullPolicy = 'Always'
-                    remoteDocker.containers = [[
-                        name: 'deb_analysis9_1',
-                        args: '-u root'
-                    ]]
-                    remoteDocker.run()
                 }
             }
         }
