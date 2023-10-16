@@ -1,5 +1,5 @@
 #include <limits.h>
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "sqrt.hpp"
 #include "sqrt.cpp"

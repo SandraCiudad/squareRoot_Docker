@@ -1,5 +1,5 @@
 all:
-	#cd build && valgrind ./executeTests --gtest_output=xml
+	cd build && valgrind ./executeTests --gtest_output=xml
 
 	#g++ sqrt_test.cpp -o output 
 
