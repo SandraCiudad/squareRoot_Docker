@@ -88,7 +88,13 @@ pipeline {
         stage('Run docker container on remote host'){
             agent any
             steps{
-                sh 'docker -H ssh://ci@192.164.29.79 run debian_cppcheck:9.1'
+                sh 'docker -H ssh://ci@192.168.29.79 run debian_cppcheck:9.1'
+                /*script{
+                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'keyFile', passphraseVariable: 'pass', usernameVariable: 'userName')]) {
+                        // some block
+                        def remote = [name:'ci', hots:'192.168.29.79']
+                    }       
+                }*/
             }
             
         }
