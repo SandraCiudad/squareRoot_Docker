@@ -93,7 +93,7 @@ pipeline {
                     withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'keyFile', passphraseVariable: 'AxoPmd4!', usernameVariable: 'ci')]) {
                         // some block
                         def remote = [name:'debian_cppcheck:9.1', hots:'192.168.29.79', user: ci, identityFile: keyFile, allowAnyHosts: true]
-                        sshCommand remote: remote, command: '''sudo cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+                        sshCommand remote: remote, command: '''sh 'docker run debian_cppcheck:9.1'''
                     }       
                 }
             }
