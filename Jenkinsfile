@@ -94,7 +94,7 @@ pipeline {
                     def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage
                     
                     // Use the SSH agent to connect to the remote host
-                    sshagent(['docker_SSH_conection']) {
+                    sshagent(['remote_ssh_conection']) {
                         sh "ssh ${remoteUser}@${remoteHost} '${commandToRun}'"
                     }
                 }
