@@ -85,7 +85,39 @@ pipeline {
             }
         } // Stage Build
 
-        stage('Run docker container on remote host'){
+        stage('Load Remote Docker Image') {
+            steps {
+                script {
+                    def imageName = 'debian_cppcheck:9.1'
+                    def registryCredentials = [
+                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_SSH_conection', variable: 'USERNAME'],
+                        [$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_SSH_conection', variable: 'PASSWORD']
+                    ]
+                    
+                    withCredentials(registryCredentials) {
+                        sh "docker login -u \$USERNAME -p \$PASSWORD"
+                        sh "docker pull $imageName"
+                    }
+                }
+            }
+        }
+
+         stage('Ejecutar en Docker Remoto') {
+            steps {
+                script {
+                    def remoteDocker = [:]
+                    remoteDocker.image = 'debian_cppcheck:9.1'
+                    remoteDocker.imagePullPolicy = 'Always'
+                    remoteDocker.containers = [[
+                        name: 'deb_analysis9_1',
+                        args: '-u root'
+                    ]]
+                    remoteDocker.run()
+                }
+            }
+        }
+
+        /*stage('Run docker container on remote host'){
             agent any
             steps{
                 //sh 'docker -H ssh://ci@192.168.29.79 run debian_cppcheck:9.1'
@@ -99,7 +131,7 @@ pipeline {
                 }
             }
             
-        }
+        }*/
 
         /*stage('Analysis') {
             
