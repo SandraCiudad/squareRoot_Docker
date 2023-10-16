@@ -86,7 +86,11 @@ pipeline {
         } // Stage Build
 
         stage('Run docker container on remote host'){
-            sh 'docker -H ssh://ci@192.164.29.79 run debian_cppcheck:9.1'
+            agent any
+            steps{
+                sh 'docker -H ssh://ci@192.164.29.79 run debian_cppcheck:9.1'
+            }
+            
         }
 
         stage('Analysis') {
