@@ -85,7 +85,7 @@ pipeline {
             }
         } // Stage Build
 
-        stage('Load Remote Docker Image') {
+        /*stage('Load Remote Docker Image') {
             steps {
                 script {
                     def imageName = 'debian_cppcheck:9.1'
@@ -100,9 +100,9 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
 
-        /*stage('Ejecutar en Docker Remoto') {
+        stage('Ejecutar en Docker Remoto') {
             steps {
                 script {
                     def remoteDocker = [:]
@@ -115,7 +115,7 @@ pipeline {
                     remoteDocker.run()
                 }
             }
-        }*/
+        }
 
         /*stage('Run docker container on remote host'){
             agent any
