@@ -34,9 +34,8 @@ pipeline {
                     
 
                     sshagent(['docker_SSH_conection']) {
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost}"
-                        sh "'${commandToRun}'"
-                        sh "ls"
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
 
                     }
                     /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
