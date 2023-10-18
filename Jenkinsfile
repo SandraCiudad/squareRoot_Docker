@@ -33,6 +33,7 @@ pipeline {
                     }
                 }
             }
+        }
 
         stage('Run Docker Container on Remote Host') {
             steps {
