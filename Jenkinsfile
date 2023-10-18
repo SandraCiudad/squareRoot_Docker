@@ -22,30 +22,7 @@ pipeline {
     stages {
 
 
-        stage('Connect to Remote Host and Run Docker') {
-            steps {
-                script {
-                    def password = 'AxoPmd4!'
-                    def remoteHost = '192.168.29.79'
-                    def sshUser = 'ci'
-                    //def sshKeyCredentialId = 'docker_SSH_conection'
-                    def dockerImage = 'debian_cppcheck:9.1'
-                    def commandToRun = 'docker run -d ' + dockerImage 
-                    def command = echo 'ssh connection stablish succesfully'
-                    
-
-                    sshagent(['docker_SSH_conection']) {
-                        
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost}"
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
-
-                    }
-                    /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
-                        ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
-                    """*/
-                }
-            }
-        }
+        
 
         /*Çstage('Run Remote Docker Image') {
             steps {
@@ -134,7 +111,7 @@ pipeline {
                         archiveArtifacts artifacts: "${TEST_SWR}/Debug_PC/${ARTIFACT_TEST}", followSymlinks: false, onlyIfSuccessful: true
                         */
 
-                        //sh 'make || true'
+                        sh 'make || true'
 
                     }
                 }
@@ -158,6 +135,70 @@ pipeline {
             }
             
         }*/
+
+
+        stage('Connect to Remote Host and Run Docker') {
+            steps {
+                script {
+                    def password = 'AxoPmd4!'
+                    def remoteHost = '192.168.29.79'
+                    def sshUser = 'ci'
+                    //def sshKeyCredentialId = 'docker_SSH_conection'
+                    def dockerImage = 'debian_cppcheck:9.1'
+                    def commandToRun = 'docker run -d ' + dockerImage 
+                    
+
+                    sshagent(['docker_SSH_conection']) {
+                        
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost}"
+
+                        script {
+                            dir("${env.WORKSPACE}") {
+                                
+                                sh '''rm -rf reports/cccc'''
+                                sh '''rm -rf reports/doxygen'''
+
+                                // CPPCheck Code Analysis
+                                sh '''ssh ci@192.168.29.79 cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+
+                                // CCCC Code Analysis
+                                sh '''ssh ci@192.168.29.79 cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+
+                                script {
+
+                                    try {
+                                        sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
+                                    }
+                                    catch(e)
+                                    {
+                                        currentBuild.result = 'SUCCESS'
+                                    }
+                                }
+                                
+                                // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
+                                sh '''ssh ci@192.168.29.79 mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
+
+                                // Run Valgrind
+                                dir("${env.WORKSPACE}/build") {
+                                    sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                                }
+                                sh '''ssh ci@192.168.29.79 valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                            }
+
+                        }
+
+
+
+
+                        //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
+
+                    }
+                    /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
+                        ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
+                    """*/
+                }
+            }
+        }
 
         /*stage('Analysis') {
             
