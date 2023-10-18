@@ -35,7 +35,8 @@ pipeline {
                     
 
                     sshagent(['docker_SSH_conection']) {
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${command}'"
+                        
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost}"
                         sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
 
                     }
