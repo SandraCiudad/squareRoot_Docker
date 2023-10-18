@@ -27,7 +27,7 @@ pipeline {
                     def remoteHost = '192.168.29.79'
                     def remoteUser = 'ci'
                     def dockerImage = 'debian_cppcheck:9.1'
-                    def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage + '-vvv'
+                    def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage + ' -vvv'
                     
                     // Use the SSH agent to connect to the remote host
                     sshagent(['docker_SSH_conection']) {
