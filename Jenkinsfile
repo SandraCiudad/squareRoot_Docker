@@ -31,10 +31,11 @@ pipeline {
                     //def sshKeyCredentialId = 'docker_SSH_conection'
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
+                    def command = echo 'ssh connection stablish succesfully'
                     
 
                     sshagent(['docker_SSH_conection']) {
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${command}'"
                         sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
 
                     }
