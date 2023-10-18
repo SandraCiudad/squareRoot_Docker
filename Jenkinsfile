@@ -21,6 +21,19 @@ pipeline {
 
     stages {
 
+
+        stage('Run Remote Docker Image') {
+            steps {
+                script {
+                    def remoteDockerImage = docker.image('debian_cppcheck:9.1')
+                    remoteDockerImage.pull()
+                    remoteDockerImage.inside {
+                        // Your commands to run inside the Docker container
+                        sh 'echo "Hello from the remote Docker image"'
+                    }
+                }
+            }
+
         stage('Run Docker Container on Remote Host') {
             steps {
                 script {
