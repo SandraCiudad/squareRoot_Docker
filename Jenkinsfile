@@ -21,6 +21,23 @@ pipeline {
 
     stages {
 
+        stage('Run Docker Container on Remote Host') {
+            steps {
+                script {
+                    def remoteHost = '192.168.29.79'
+                    def remoteUser = 'ci'
+                    def dockerImage = 'debian_cppcheck:9.1'
+                    def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage
+                    
+                    // Use the SSH agent to connect to the remote host
+                    sshagent(['docker_SSH_conection']) {
+                        sh "ssh ${remoteUser}@${remoteHost} '${commandToRun}'"
+                    }
+                }
+            }
+        }
+
+
         stage('Prebuild') {
             
             steps {
@@ -85,21 +102,7 @@ pipeline {
             }
         } // Stage Build
 
-        stage('Run Docker Container on Remote Host') {
-            steps {
-                script {
-                    def remoteHost = '192.168.29.79'
-                    def remoteUser = 'ci'
-                    def dockerImage = 'debian_cppcheck:9.1'
-                    def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage
-                    
-                    // Use the SSH agent to connect to the remote host
-                    sshagent(['docker_SSH_conection']) {
-                        sh "ssh ${remoteUser}@${remoteHost} '${commandToRun}'"
-                    }
-                }
-            }
-        }
+        
 
         /*stage('Run docker container on remote host'){
             agent any
