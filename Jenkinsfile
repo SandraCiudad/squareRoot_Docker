@@ -25,14 +25,16 @@ pipeline {
         stage('Connect to Remote Host and Run Docker') {
             steps {
                 script {
+                    def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
                     def sshUser = 'ci'
                     //def sshKeyCredentialId = 'docker_SSH_conection'
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
+                    
 
                     sshagent(['docker_SSH_conection']) {
-                        sh "ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
                     }
                     /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
                         ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
