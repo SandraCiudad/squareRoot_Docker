@@ -146,10 +146,13 @@ pipeline {
                     //def sshKeyCredentialId = 'docker_SSH_conection'
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
-                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                    //def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
+                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                    }
 
-                    script {
+                    /*script {
                         def sshAgentStep = sshagent(['docker_SSH_conection'])
                         try {
                             // Within the SSH agent context, run your SSH commands
@@ -163,7 +166,7 @@ pipeline {
                                 error("SSH agent failed with exit status: $sshAgentExitStatus")
                             }
                         }
-                    }
+                    }*/
 
                     /*def isAgentRunning = sh(script: 'ps aux | grep ssh-agent | grep -v grep', returnStatus: true) == 0
 
@@ -233,7 +236,7 @@ pipeline {
             }
         }
 
-        /*stage('Analysis') {
+        stage('Analysis') {
             
             agent {
                 docker { 
@@ -248,7 +251,13 @@ pipeline {
                 // -- Acciones dentro del container
                 
                 script {
-                    dir("${env.WORKSPACE}") {
+
+                    def sshKeyFile = env.SSH_KEY
+                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                    
+                    sh "sshpass -p AxoPmd4! ssh -i $sshKeyFile ci@192.168.29.79 ${cppcheck_command}"
+
+                    /*dir("${env.WORKSPACE}") {
                         
                         sh '''rm -rf reports/cccc'''
                         sh '''rm -rf reports/doxygen'''
@@ -278,12 +287,12 @@ pipeline {
                             sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
                         sh '''ssh ci@192.168.29.79 valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
-                    }
+                    }*/
 
                 }
             }
 
-        } // Stage Analysis*/
+        } // Stage Analysis
 
         stage('Tests') {
             
@@ -296,11 +305,16 @@ pipeline {
             }
             
             steps {
-
-                dir("${env.WORKSPACE}") 
+                script{
+                    def sshKeyFile = env.SSH_KEY
+                    def command = './executeTests --gtest_output=xml'
+                    
+                    sh "sshpass -p AxoPmd4! ssh -i $sshKeyFile ci@192.168.29.79 ${cppcheck_command}"
+                }
+                /*dir("${env.WORKSPACE}") 
                 {
                     sh './executeTests --gtest_output=xml'
-                }
+                }*/
             }
         } // Stage Tests
         
