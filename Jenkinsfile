@@ -149,7 +149,23 @@ pipeline {
                     def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
 
-                    sshagent(['docker_SSH_conection']) {
+                    def isAgentRunning = sh(script: 'ps aux | grep ssh-agent | grep -v grep', returnStatus: true) == 0
+
+                    if (!isAgentRunning) {
+                        echo 'SSH agent is not running. Starting SSH agent...'
+                        sh 'eval `ssh-agent`'
+                        sshagent(['docker_SSH_conection']) {
+                            sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
+                        }
+                    } else {
+                        sshagent(['docker_SSH_conection']) {
+                            sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
+                        }
+                    }
+                
+
+
+                    /*sshagent(['docker_SSH_conection']) {
                         
                         sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
 
@@ -193,7 +209,7 @@ pipeline {
 
                         //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} ls"
 
-                    }
+                    }*/
                     /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
                         ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
                     """*/
