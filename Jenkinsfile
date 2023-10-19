@@ -96,17 +96,20 @@ pipeline {
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
                     //def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                    
-                    
+                    def cccc = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc' 
+                    def tests = './executeTests --gtest_output=xml'
+                    def publish_cccc = publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: 'reports/cccc', 
+                                reportFiles: 'index.html', 
+                                reportName: 'CCCC Report', 
+                                reportTitles: 'The CCCC report'])
 
-                    try {
-                        withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' && ${cccc} && ${tests} && ${publish_cccc}"
                     }
-                    } catch (Exception e) {
-                        currentBuild.result = 'SUCCESS'
-                        error("Error en el agente SSH: ${e.message}")
-                    }
+
 
                     /*script {
                         def sshAgentStep = sshagent(['docker_SSH_conection'])
