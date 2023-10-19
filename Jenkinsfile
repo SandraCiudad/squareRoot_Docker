@@ -146,11 +146,12 @@ pipeline {
                     //def sshKeyCredentialId = 'docker_SSH_conection'
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
+                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
 
                     sshagent(['docker_SSH_conection']) {
                         
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
 
                         script {
                             dir("${env.WORKSPACE}") {
