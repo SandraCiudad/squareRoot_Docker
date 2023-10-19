@@ -149,7 +149,16 @@ pipeline {
                     def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
 
-                    def isAgentRunning = sh(script: 'ps aux | grep ssh-agent | grep -v grep', returnStatus: true) == 0
+                    try {
+                        sshagent(['docker_SSH_conection']) {
+                            sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
+                        }
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("SSH agent failed: ${e.message}")
+                    }
+
+                    /*def isAgentRunning = sh(script: 'ps aux | grep ssh-agent | grep -v grep', returnStatus: true) == 0
 
                     if (!isAgentRunning) {
                         echo 'SSH agent is not running. Starting SSH agent...'
@@ -161,7 +170,7 @@ pipeline {
                         sshagent(['docker_SSH_conection']) {
                             sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
                         }
-                    }
+                    }*/
                 
 
 
