@@ -149,13 +149,20 @@ pipeline {
                     def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
 
-                    try {
-                        sshagent(['docker_SSH_conection']) {
+                    script {
+                        def sshAgentStep = sshagent(['docker_SSH_conection'])
+                        try {
+                            // Within the SSH agent context, run your SSH commands
                             sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
+                        } finally {
+                            // Stop the SSH agent and capture the exit status
+                            def sshAgentExitStatus = sshAgentStep.stop()
+                            
+                            if (sshAgentExitStatus != 0) {
+                                currentBuild.result = 'FAILURE'
+                                error("SSH agent failed with exit status: $sshAgentExitStatus")
+                            }
                         }
-                    } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
-                        error("SSH agent failed: ${e.message}")
                     }
 
                     /*def isAgentRunning = sh(script: 'ps aux | grep ssh-agent | grep -v grep', returnStatus: true) == 0
