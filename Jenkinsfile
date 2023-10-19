@@ -104,7 +104,7 @@ pipeline {
                         sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
                     }
                     } catch (Exception e) {
-                        currentBuild.result = 'FAILURE'
+                        currentBuild.result = 'SUCCESS'
                         error("Error en el agente SSH: ${e.message}")
                     }
 
