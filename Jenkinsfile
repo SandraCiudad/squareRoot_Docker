@@ -21,39 +21,6 @@ pipeline {
 
     stages {
 
-
-        
-
-        /*Çstage('Run Remote Docker Image') {
-            steps {
-                script {
-                    def remoteDockerImage = docker.image('debian_cppcheck:9.1')
-                    remoteDockerImage.pull()
-                    remoteDockerImage.inside {
-                        // Your commands to run inside the Docker container
-                        sh 'echo "Hello from the remote Docker image"'
-                    }
-                }
-            }
-        }
-
-        stage('Run Docker Container on Remote Host') {
-            steps {
-                script {
-                    def remoteHost = '192.168.29.79'
-                    def remoteUser = 'ci'
-                    def dockerImage = 'debian_cppcheck:9.1'
-                    def commandToRun = 'docker run -d --name deb_analysis9_1 ' + dockerImage + ' -vvv'
-                    
-                    // Use the SSH agent to connect to the remote host
-                    sshagent(['docker_SSH_conection']) {
-                        sh "ssh ${remoteUser}@${remoteHost} '${commandToRun}'"
-                    }
-                }
-            }
-        }*/
-
-
         stage('Prebuild') {
             
             steps {
@@ -118,24 +85,6 @@ pipeline {
             }
         } // Stage Build
 
-        
-
-        /*stage('Run docker container on remote host'){
-            agent any
-            steps{
-                //sh 'docker -H ssh://ci@192.168.29.79 run debian_cppcheck:9.1'
-                script{
-                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'keyFile', passphraseVariable: 'AxoPmd4!', usernameVariable: 'ci')]) {
-                        // some block
-                        def remote = [name:'ci', hots:'192.168.29.79', user: root, identityFile: keyFile, allowAnyHosts: true]
-                        //sshCommand remote: remote, command: '''sh docker run debian_cppcheck:9.1'''
-                        sshCommand remote: remote, command: '''ls''' 
-                    }       
-                }
-            }
-            
-        }*/
-
 
         stage('Connect to Remote Host and Run Docker') {
             steps {
@@ -148,8 +97,15 @@ pipeline {
                     def commandToRun = 'docker run -d ' + dockerImage 
                     //def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     
-                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
+                    
+
+                    try {
+                        withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
                         sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                    }
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("Error en el agente SSH: ${e.message}")
                     }
 
                     /*script {
