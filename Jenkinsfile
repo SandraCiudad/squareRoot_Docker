@@ -116,12 +116,12 @@ pipeline {
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc' 
                     //def tests = './executeTests --gtest_output=xml'
 
-                    /*withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
-                        //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' && ${cccc} && ${tests} && ${publish_cccc}"
-                        sh 'sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1'
+                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        //sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
                         sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
 
-                    }*/
+                    }
 
                     /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
@@ -152,13 +152,6 @@ pipeline {
                         sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${valgrind_command}" 
                     }*/
 
-
-                    
-                    
-
-                    sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
-                        ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
-                    """
                 }
             }
         }
