@@ -89,7 +89,7 @@ pipeline {
         stage('Connect to Remote Host and Run Docker') {
             steps {
                 script {
-                    def password = 'AxoPmd4!'
+                    /*def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
                     def sshUser = 'ci'
                     //def sshKeyCredentialId = 'docker_SSH_conection'
@@ -106,7 +106,7 @@ pipeline {
                                 reportName: 'CCCC Report', 
                                 reportTitles: 'The CCCC report'])
 
-                    /*withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
                         //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' && ${cccc} && ${tests} && ${publish_cccc}"
                         sh 'sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1 && cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; cat index.html'
                     }*/
