@@ -98,13 +98,13 @@ pipeline {
                     
 
 
-                    /*sshagent(credentials: ['ssh_pwd']){
+                    sshagent(credentials: ['ssh_pwd']){
                         sh"""
                             sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer $remoteCommand
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/GitHub/squareRoot_docker/ && ${cppcheck_command}
                         """
-                    }*/     
+                    }      
                     
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
@@ -117,7 +117,7 @@ pipeline {
                     //def tests = './executeTests --gtest_output=xml'
 
 
-                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                    /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
                     def cpd_command = "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
                     def doxygen_command = "mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports"    
@@ -144,7 +144,7 @@ pipeline {
                             sh 'sshpass AxoPmd4! ssh ci@192.168.29.79 cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
                         sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${valgrind_command}" 
-                    }
+                    }*/
 
                 }
             }
