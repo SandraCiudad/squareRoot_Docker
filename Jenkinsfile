@@ -101,7 +101,7 @@ pipeline {
                         """
                     }       
                     
-                    def password = 'AxoPmd4!'
+                    /*def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
                     def sshUser = 'ci'
                     //def sshKeyCredentialId = 'docker_SSH_conection'
@@ -116,7 +116,7 @@ pipeline {
                         sh 'sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1'
                         sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
 
-                    }
+                    }*/
 
                     /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
