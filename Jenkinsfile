@@ -98,13 +98,13 @@ pipeline {
                     
 
 
-                    sshagent(credentials: ['ssh_pwd']){
+                    /*sshagent(credentials: ['ssh_pwd']){
                         sh"""
                             sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer $remoteCommand
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/GitHub/squareRoot_docker/ && ${cppcheck_command}
                         """
-                    }      
+                    }*/     
                     
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
@@ -116,12 +116,12 @@ pipeline {
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc' 
                     //def tests = './executeTests --gtest_output=xml'
 
-                    /*withCredentials([sshUserPrivateKey(credentialsId: 'ssh_pwd', keyFileVariable: 'SSH_KEY')]) {
+                    withCredentials([sshUserPrivateKey(credentialsId: 'ssh_pwd', keyFileVariable: 'SSH_KEY')]) {
                         //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
                         sh "ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
                         sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
 
-                    }*/
+                    }
 
                     /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
