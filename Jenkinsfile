@@ -93,14 +93,13 @@ pipeline {
                     
                     def remoteServer = '192.168.29.79'
                     def remoteUser = 'ci'
-                    def remoteCredential = 'docker_SSH_conection'
+                    def remoteCommand = 'echo "Conexion correcta"'
 
-                    sshCommand(
-                        remote: remoteServer,
-                        user : remoteUser,
-                        credentialId: remoteCredential,
-                        command: 'echo "Conexion SSH exitosa"'
-                    )                    
+                    sshagent(credentials: ['docker_SSH_conection']){
+                        sh"""
+                            ssh $remoteUser@$remoteServer '$remoteCommand'
+                        """
+                    }       
                     
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
