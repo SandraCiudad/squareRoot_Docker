@@ -94,10 +94,14 @@ pipeline {
                     def remoteServer = '192.168.29.79'
                     def remoteUser = 'ci'
                     def remoteCommand = 'echo "Conexion correcta"'
+                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+
 
                     sshagent(credentials: ['docker_SSH_conection']){
                         sh"""
                             sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer '$remoteCommand'
+                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
+                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}
                         """
                     }       
                     
@@ -107,7 +111,7 @@ pipeline {
                     //def sshKeyCredentialId = 'docker_SSH_conection'
                     def dockerImage = 'debian_cppcheck:9.1'
                     def commandToRun = 'docker run -d ' + dockerImage 
-                    //def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                    //
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc' 
                     //def tests = './executeTests --gtest_output=xml'
 
