@@ -119,8 +119,11 @@ pipeline {
                     
                     sshagent(credentials: [docker_SSH_conection]){
                         sh "ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
+                        echo "despues de establecer conexion ssh"
                         sh "ssh ci@192.168.29.79 ${cppcheck_command}"
+                        echo "despues de hacer cpp check"
                         sh "ssh ci@192.168.29.79 ${cccc_command}"
+                        echo "despues de hacer cccc"
 
                         script {
                             try {
