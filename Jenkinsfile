@@ -117,8 +117,8 @@ pipeline {
                     //def tests = './executeTests --gtest_output=xml'
 
                     withCredentials([sshUserPrivateKey(credentialsId: 'docker_SSH_conection', keyFileVariable: 'SSH_KEY')]) {
-                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
-                        //sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
+                        //sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}'"
+                        sh "ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
                         sh "sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
 
                     }
