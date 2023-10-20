@@ -95,11 +95,11 @@ pipeline {
                     def remoteUser = 'ci'
                     def remoteCommand = 'echo "Conexion correcta"'
                     def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-
+                    def docker_run = 'docker run -d debian_cppcheck:9.1'
 
                     sshagent(credentials: ['docker_SSH_conection']){
                         sh"""
-                            sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer '$remoteCommand' && docker run -d debian_cppcheck:9.1 && cd /home/ci/Documentos/GitHub/squareRoot_docker/ && ${cppcheck_command}
+                            sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer  && $docker_run cd /home/ci/Documentos/GitHub/squareRoot_docker/ && ${cppcheck_command}
                         """
                     }       
                     
