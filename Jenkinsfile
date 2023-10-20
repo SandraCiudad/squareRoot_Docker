@@ -153,21 +153,21 @@ pipeline {
                     }*/
 
 
-                    script {
-                        def sshAgentStep = sshagent(['docker_SSH_conection'])
-                        try {
-                            // Within the SSH agent context, run your SSH commands
-                            sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
-                        } finally {
-                            // Stop the SSH agent and capture the exit status
-                            def sshAgentExitStatus = sshAgentStep.stop()
-                            
-                            if (sshAgentExitStatus != 0) {
-                                currentBuild.result = 'FAILURE'
-                                error("SSH agent failed with exit status: $sshAgentExitStatus")
-                            }
+                    
+                    def sshAgentStep = sshagent(['docker_SSH_conection'])
+                    try {
+                        // Within the SSH agent context, run your SSH commands
+                        sh "sshpass -p ${password} ssh ${sshUser}@${remoteHost} '${commandToRun}' ${cppcheck_command}"
+                    } finally {
+                        // Stop the SSH agent and capture the exit status
+                        def sshAgentExitStatus = sshAgentStep.stop()
+                       
+                        if (sshAgentExitStatus != 0) {
+                            currentBuild.result = 'FAILURE'
+                            error("SSH agent failed with exit status: $sshAgentExitStatus")
                         }
                     }
+                    
 
                     /*sshScript remote: remoteHost, user: sshUser, credentialsId: sshKeyCredentialId, script: """
                         ssh -o StrictHostKeyChecking=no \$user@\$remoteHost 'docker run \$dockerImage'
