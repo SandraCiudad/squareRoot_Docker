@@ -119,13 +119,13 @@ pipeline {
                     def valgrind_command = "valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos"
                     
                     sshagent(credentials: [docker_SSH_conection]){
-                        sh "ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
-                        sh "ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
-                        sh "ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cccc_command}"
+                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
+                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
+                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cccc_command}"
 
                         script {
                             try {
-                                sh "ssh ci@192.168.29.79 ${cpd_command}"
+                                sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${cpd_command}"
                             }
                             catch(e)
                             {
@@ -133,12 +133,12 @@ pipeline {
                             }
                         }
 
-                        sh "ssh ci@192.168.29.79 ${doxygen_command}"
+                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${doxygen_command}"
 
                         dir("${env.WORKSPACE}/build") {
-                            sh 'ssh ci@192.168.29.79 cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                            sh 'sshpass AxoPmd4! ssh ci@192.168.29.79 cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
-                        sh "ssh ci@192.168.29.79 ${valgrind_command}" 
+                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${valgrind_command}" 
                     }
 
 
