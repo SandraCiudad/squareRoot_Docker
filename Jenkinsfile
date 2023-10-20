@@ -98,7 +98,7 @@ pipeline {
                     sshCommand(
                         remote: remoteServer,
                         user : remoteUser,
-                        credentialsId: remoteCredential,
+                        credentialId: remoteCredential,
                         command: 'echo "Conexion SSH exitosa"'
                     )                    
                     
