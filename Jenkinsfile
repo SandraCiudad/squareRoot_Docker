@@ -97,7 +97,7 @@ pipeline {
 
                     sshagent(credentials: ['docker_SSH_conection']){
                         sh"""
-                            ssh $remoteUser@$remoteServer '$remoteCommand'
+                            sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer '$remoteCommand'
                         """
                     }       
                     
