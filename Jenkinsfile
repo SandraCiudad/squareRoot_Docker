@@ -28,7 +28,7 @@ pipeline {
                 sh "mkdir -p reports"
                 sh "mkdir -p doc"
 
-                sh 'cmake -S . -B build'
+                sh 'cmake -S /home/sandra/Documentos/Documentos/compartir/squareRoot_Docker/ -B build'
                 sh 'cmake --build build'
                 
                 //sh "cp /home/jmenam/automated_compilation/compile.sh ."
