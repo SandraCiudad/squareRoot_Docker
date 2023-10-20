@@ -90,6 +90,18 @@ pipeline {
         stage('Connect to Remote Host and Run Docker') {
             steps {
                 script {
+                    
+                    def remoteServer = '192.168.29.79'
+                    def remoteUser = 'ci'
+                    def remoteCredential = 'docker_SSH_conection'
+
+                    sshCommand(
+                        remote: remoteServer,
+                        user : remoteUser,
+                        credentialsId: remoteCredential,
+                        command: 'echo "Conexion SSH exitosa"'
+                    )                    
+                    
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
                     def sshUser = 'ci'
