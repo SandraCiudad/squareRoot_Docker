@@ -98,9 +98,10 @@ pipeline {
 
 
                     sshagent(credentials: ['ssh_agent_credentials']){
-                        sh """
-                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 ls
-                        """
+                        script{
+                            sh 'sshpass -p AxoPmd4! ssh ci@192.168.29.79 ls'
+                        }
+                        
                     }     
                     
                     def password = 'AxoPmd4!'
