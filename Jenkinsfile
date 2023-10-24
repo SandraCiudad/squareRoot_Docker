@@ -96,13 +96,13 @@ pipeline {
                     def docker_image = 'debian_cppcheck:9.1'
                     def remoteCommand = 'docker run -d' + docker_image
                     
-                    sh 'ssh -i $SSH_KEY ci@192.168.29.79 docker run -d debian_cppcheck:9.1'
+                    //sh 'ssh -i $SSH_KEY ci@192.168.29.79 docker run -d debian_cppcheck:9.1'
 
-                    /*sshagent(credentials: ['ssh_agent_credentials']){
-                        sh '''
-                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
-                        '''
-                    }*/     
+                    sshagent(credentials: ['ssh_agent_credentials']){
+                        sh """
+                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 ls
+                        """
+                    }     
                     
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
