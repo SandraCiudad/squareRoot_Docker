@@ -99,9 +99,9 @@ pipeline {
 
 
                     sshagent(credentials: ['ssh_agent_credentials']){
-                        sh '
+                        sh '''
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
-                        '
+                        '''
                     }      
                     
                     def password = 'AxoPmd4!'
