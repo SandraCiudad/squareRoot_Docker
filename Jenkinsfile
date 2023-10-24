@@ -99,11 +99,9 @@ pipeline {
 
 
                     sshagent(credentials: ['ssh_agent_credentials']){
-                        sh"""
-                            sshpass -p AxoPmd4! ssh $remoteUser@$remoteServer $remoteCommand
+                        sh '
                             sshpass -p AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
-                            sshpass -p AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/GitHub/squareRoot_docker/ && ${cppcheck_command}
-                        """
+                        '
                     }      
                     
                     def password = 'AxoPmd4!'
