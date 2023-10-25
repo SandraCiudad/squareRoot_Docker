@@ -1,5 +1,7 @@
 pipeline {
-    agent any
+    agent {
+        label 'ssh_dockerAgent_credentials'
+    }
 
     /*agent {
         node {
@@ -91,20 +93,22 @@ pipeline {
             steps {
                 script {
                     
+                    sshCommand remote: 'ci@192.168.29.79', command: 'ls -al'
+
                     def remoteServer = '192.168.29.79'
                     def remoteUser = 'ci'
                     def docker_image = 'debian_cppcheck:9.1'
                     def remoteCommand = 'docker run -d' + docker_image
 
 
-                    sshagent(credentials: ['ssh_dockerAgent_credentials']){
+                    /*sshagent(credentials: ['ssh_dockerAgent_credentials']){
                         
                         sh '''
                             ssh ci@192.168.29.79 docker-compose up -d
                         '''
                         
                         
-                    }     
+                    } */    
                     
                     def password = 'AxoPmd4!'
                     def remoteHost = '192.168.29.79'
