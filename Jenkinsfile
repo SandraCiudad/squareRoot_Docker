@@ -99,7 +99,7 @@ pipeline {
 
                     sshagent(credentials: ['ssh_dockerAgent_credentials']){
                         script{
-                            sh 'ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1'
+                            sh 'ssh ci@192.168.29.79:/home/ci docker-compose up -d'
                         }
                         
                     }     
