@@ -126,7 +126,7 @@ pipeline {
                             sh label: '', script: """ssh ${remoteConnection} docker run -d --name deb_analysis ${docker_image}
                                 docker ps
                                 docker ps -a
-                                docker container exec deb_analysis9_1 ls
+                                docker container exec deb_analysis ls
 
                             """
                             sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos && docker exec -it deb_analysis9_1 bash	
