@@ -127,6 +127,11 @@ pipeline {
                                 ssh ${remoteConnection} ${dockerCompose}  
                             """
                             sh label: '', script: """#!/bin/bash	
+                                    echo
+                                    echo
+                                    ls
+                                    echo
+                                    echo
                                     ${rm_cccc}
                                     ${rm_doxygen}
                                     echo CPP CHECK:
