@@ -137,7 +137,7 @@ pipeline {
                                 echo
                                 echo --------------------------------------------------
                                 echo DOXYGEN:
-                                echo ls
+                                ls
                                 ${doxygen}
                         """
 
