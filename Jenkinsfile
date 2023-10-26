@@ -104,7 +104,7 @@ pipeline {
                     def remoteUser = 'ci'
                     def remoteConnection = remoteUser + '@' + remoteServer
                     def docker_image = 'debian_cppcheck:9.1'
-                    def remoteCommand = 'docker run -d' + docker_image
+                    def remoteCommand = 'docker run -d ' + docker_image
                     //Analysis
                     def rm_cccc = 'rm -rf reports/cccc' 
                     def rm_doxygen = 'rm -rf reports/doxygen'
