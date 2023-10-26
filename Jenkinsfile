@@ -123,16 +123,14 @@ pipeline {
                                 ssh ci@192.168.29.79 ls
                                 
                             '''*/
-                            sh label: '', script: """ssh ${remoteConnection} -t "docker ps | head -n 2 | tail -n 1 | cut -d' ' -f1 | tr -d '\r\n' " `
+                            sh label: '', script: """ssh ${remoteConnection} /home/ci/Documentos/docker-compose up -d
 
                                 docker exec -ti deb_analysis9_1 -u root /bin/bash
                                 
                                 docker ps -a
                                 
-                                docker container exec deb_analysis ls
-
                             """
-                            sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos && docker exec -it deb_analysis9_1 bash	
+                            /*sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos/docker-compose up -d && docker exec -it deb_analysis9_1 bash	
                                     echo
                                     echo
                                     ls
@@ -151,7 +149,7 @@ pipeline {
                                     echo DOXYGEN:
                                     ls
                                     ${doxygen}
-                            """
+                            """*/
                     }
                     
 
