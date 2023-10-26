@@ -125,8 +125,9 @@ pipeline {
                         '''*/
                         sh """
                             ssh ${remoteConnection} ${dockerCompose}
-                            ssh ${remoteConnection} ${dockerBash} 
+                            sh label: '', script: '''#!/bin/bash	
                                 ls
+                            fi'''
                             
                             
                         """
