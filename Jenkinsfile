@@ -118,14 +118,25 @@ pipeline {
 
                         sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
-                            sh """"
+                            sh """
                                 ssh ${remoteConnection} docker-compose up -d
                                 ssh ${remoteConnection} docker ps -a 
-                                
                             """
                             sh label: '', script: """ ssh ${remoteConnection} docker  exec -i deb_analysis9_1 /bin/bash 
                                     ls
+                                    echo dentro del container??
+                                    echo
+                                    exit
+                                
                             """
+
+                            
+                            /*"""
+                                docker exec -ti deb_analysis9_1 -u root /bin/bash
+                                
+                                docker ps -a
+                                
+                            """*/
                             /*sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos/docker-compose up -d && docker exec -it deb_analysis9_1 bash	
                                     echo
                                     echo
