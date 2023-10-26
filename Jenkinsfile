@@ -124,7 +124,7 @@ pipeline {
                                 
                             '''*/
                             sh label: '', script: """ssh ${remoteConnection} docker run -d --name deb_analysis ${docker_image}
-                                docker ps
+                                docker restart deb_analysis
                                 docker ps -a
                                 docker container exec deb_analysis ls
 
