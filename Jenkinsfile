@@ -87,36 +87,79 @@ pipeline {
         } // Stage Build
 
 
-        stage('Connect to Remote Host and Run Docker') {
+        stage('Connect to Remote Host and Analysis Step') {
+            
+            agent {
+                docker { 
+                    image env.ANALYSIS_DOCKER_IMAGE         
+                    args env.DOCKER_ARGS
+                    reuseNode true        
+                }
+            }
+
             steps {
                 script {
-                    
+                    //Connection and run docker
                     def remoteServer = '192.168.29.79'
                     def remoteUser = 'ci'
+                    def remoteConnection = remoteUser + '@' + remoteServer
                     def docker_image = 'debian_cppcheck:9.1'
                     def remoteCommand = 'docker run -d' + docker_image
-
+                    //Analysis
+                    def rm_cccc = 'rm -rf reports/cccc' 
+                    def rm_doxygen = 'rm -rf reports/doxygen'
+                    def cppcheck = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                    def cccc = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
+                    def cpd = '/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml'
+                    def doxygen = 'mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'
+                    def valgrind = ' valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'
 
                     sshagent(credentials: ['ssh_dockerAgent_credentials']){
                         
-                        sh '''
+                        /*sh '''
                             ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
                             ssh ci@192.168.29.79 ls
-                        '''
-                        
-                        
-                    }     
-                    
-                    def password = 'AxoPmd4!'
-                    def remoteHost = '192.168.29.79'
-                    def sshUser = 'ci'
-                    //def sshKeyCredentialId = 'docker_SSH_conection'
-                    def dockerImage = 'debian_cppcheck:9.1'
-                    def commandToRun = 'docker run -d ' + dockerImage 
-                    def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                    def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc' 
-                    //def tests = './executeTests --gtest_output=xml'
+                            
+                        '''*/
+                        sh """
+                            ssh ${remoteConnection} ${remoteCommand}
+                            ssh ${remoteConnection} ls
+                            
+                        """
 
+                        /*
+
+                        // CPPCheck Code Analysis
+                        sh '''ssh ci@192.168.29.79 cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+
+                        // CCCC Code Analysis
+                        sh '''ssh ci@192.168.29.79 cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+
+                        script {
+
+                            try {
+                                sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
+                            }
+                            catch(e)
+                            {
+                                currentBuild.result = 'SUCCESS'
+                            }
+                        }
+                        
+                        // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
+                        sh '''ssh ci@192.168.29.79 mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
+
+                        // Run Valgrind
+                        dir("${env.WORKSPACE}/build") {
+                            sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                        }
+                        sh '''ssh ci@192.168.29.79 valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                    }    
+                    */
+                        
+                    } 
+                    
+                    
 
                     /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
                     def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
