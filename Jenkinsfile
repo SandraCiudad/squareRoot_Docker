@@ -126,7 +126,7 @@ pipeline {
                             sh label: '', script: """
                                 ssh ${remoteConnection} docker-compose up -d
                                 ssh ${remoteConnection} docker ps -a 
-                                ssh ${remoteConnection} docker  exec -i debian_analysis9_1 /bin/bash 
+                                ssh ${remoteConnection} docker  exec -i deb_analysis9_1 /bin/bash 
                                     ls
                                     echo dentro del container??
                                     echo
