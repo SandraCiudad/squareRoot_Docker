@@ -123,7 +123,7 @@ pipeline {
                                 ssh ci@192.168.29.79 ls
                                 
                             '''*/
-                            sh label: '', script: """ssh ${remoteConnection} ${remoteCommand} 
+                            sh label: '', script: """ssh ${remoteConnection} ${dockerCompose} 
                                 ls
                                 docker ps
                                 docker ps -a
