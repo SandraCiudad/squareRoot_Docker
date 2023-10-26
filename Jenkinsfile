@@ -105,7 +105,7 @@ pipeline {
                         def remoteUser = 'ci'
                         def remoteConnection = remoteUser + '@' + remoteServer
                         def docker_image = 'debian_cppcheck:9.1'
-                        def remoteCommand = 'docker run -d ' + docker_image
+                        def remoteCommand = 'docker run -d --name deb_analysis ' + docker_image
                         def dockerCompose = 'docker-compose up -d'
                         //Analysis
                         def rm_cccc = 'rm -rf reports/cccc' 
@@ -123,7 +123,8 @@ pipeline {
                                 ssh ci@192.168.29.79 ls
                                 
                             '''*/
-                            sh label: '', script: """ssh ${remoteConnection} ${dockerCompose} 
+                            sh label: '', script: """ssh ${remoteConnection} ${remoteCommand} 
+                                ls
                                 docker ps
                                 docker ps -a
                                 docker container exec deb_analysis9_1 ls
