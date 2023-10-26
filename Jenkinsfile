@@ -106,6 +106,7 @@ pipeline {
                     def docker_image = 'debian_cppcheck:9.1'
                     def remoteCommand = 'docker run -d ' + docker_image
                     def dockerCompose = 'docker-compose up -d'
+                    def dockerBash = 'docker exec -it deb_analysis9_1 bash'
                     //Analysis
                     def rm_cccc = 'rm -rf reports/cccc' 
                     def rm_doxygen = 'rm -rf reports/doxygen'
@@ -124,6 +125,7 @@ pipeline {
                         '''*/
                         sh """
                             ssh ${remoteConnection} ${dockerCompose}
+                            ssh ${remoteConnection} ${dockerBash}
                             ssh ${remoteConnection} ls
                             
                         """
