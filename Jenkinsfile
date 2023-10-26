@@ -124,6 +124,8 @@ pipeline {
                                 
                             '''*/
                             sh label: '', script: """ssh ${remoteConnection} ${dockerCompose} 
+                                docker ps
+                                docker ps -a
                                 docker container exec deb_analysis9_1 ls
 
                             """
