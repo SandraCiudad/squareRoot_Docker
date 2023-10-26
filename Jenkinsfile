@@ -123,8 +123,9 @@ pipeline {
                                 ssh ci@192.168.29.79 ls
                                 
                             '''*/
-                            sh label: '', script: """ssh ${remoteConnection} ${dockerCompose} && docker exec -it deb_analysis9_1 bash
-                                    ls
+                            sh label: '', script: """ssh ${remoteConnection} ${dockerCompose} 
+                                docker container exec deb_analysis9_1 ls
+
                             """
                             sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos && docker exec -it deb_analysis9_1 bash	
                                     echo
