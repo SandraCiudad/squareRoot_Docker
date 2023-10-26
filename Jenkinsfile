@@ -99,47 +99,50 @@ pipeline {
 
             steps {
                 script {
-                    //Connection and run docker
-                    def remoteServer = '192.168.29.79'
-                    def remoteUser = 'ci'
-                    def remoteConnection = remoteUser + '@' + remoteServer
-                    def docker_image = 'debian_cppcheck:9.1'
-                    def remoteCommand = 'docker run -d ' + docker_image
-                    def dockerCompose = 'docker-compose up -d'
-                    //Analysis
-                    def rm_cccc = 'rm -rf reports/cccc' 
-                    def rm_doxygen = 'rm -rf reports/doxygen'
-                    def cppcheck = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                    def cccc = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
-                    def cpd = '/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml'
-                    def doxygen = 'mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'
-                    def valgrind = ' valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'
+                    dir("${env.WORKSPACE}") {
+                        //Connection and run docker
+                        def remoteServer = '192.168.29.79'
+                        def remoteUser = 'ci'
+                        def remoteConnection = remoteUser + '@' + remoteServer
+                        def docker_image = 'debian_cppcheck:9.1'
+                        def remoteCommand = 'docker run -d ' + docker_image
+                        def dockerCompose = 'docker-compose up -d'
+                        //Analysis
+                        def rm_cccc = 'rm -rf reports/cccc' 
+                        def rm_doxygen = 'rm -rf reports/doxygen'
+                        def cppcheck = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
+                        def cccc = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
+                        def cpd = '/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml'
+                        def doxygen = 'mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'
+                        def valgrind = ' valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'
 
-                    sshagent(credentials: ['ssh_dockerAgent_credentials']){
-                        
-                        /*sh '''
-                            ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
-                            ssh ci@192.168.29.79 ls
+                        sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
-                        '''*/
-                        sh """
-                            ssh ${remoteConnection} ${dockerCompose}  
-                        """
-                        sh label: '', script: """#!/bin/bash	
-                                ${rm_cccc}
-                                ${rm_doxygen}
-                                echo CPP CHECK:
-                                ${cppcheck}
-                                echo CCCC:
-                                ${cccc}
-                                echo 
-                                echo
-                                echo
-                                echo --------------------------------------------------
-                                echo DOXYGEN:
-                                ls
-                                ${doxygen}
-                        """
+                            /*sh '''
+                                ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
+                                ssh ci@192.168.29.79 ls
+                                
+                            '''*/
+                            sh """
+                                ssh ${remoteConnection} ${dockerCompose}  
+                            """
+                            sh label: '', script: """#!/bin/bash	
+                                    ${rm_cccc}
+                                    ${rm_doxygen}
+                                    echo CPP CHECK:
+                                    ${cppcheck}
+                                    echo CCCC:
+                                    ${cccc}
+                                    echo 
+                                    echo
+                                    echo
+                                    echo --------------------------------------------------
+                                    echo DOXYGEN:
+                                    ls
+                                    ${doxygen}
+                            """
+                    }
+                    
 
                         /*
 
@@ -235,10 +238,10 @@ pipeline {
                         sh '''rm -rf reports/doxygen'''
 
                         // CPPCheck Code Analysis
-                        sh '''ssh ci@192.168.29.79 cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+                        sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
 
                         // CCCC Code Analysis
-                        sh '''ssh ci@192.168.29.79 cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+                        sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
 
                         script {
 
