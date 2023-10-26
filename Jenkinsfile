@@ -126,14 +126,18 @@ pipeline {
                             ssh ${remoteConnection} ${dockerCompose}  
                         """
                         sh label: '', script: """#!/bin/bash	
-                                echo removing components...
                                 ${rm_cccc}
                                 ${rm_doxygen}
                                 echo CPP CHECK:
                                 ${cppcheck}
                                 echo CCCC:
                                 ${cccc}
+                                echo 
+                                echo
+                                echo
+                                echo --------------------------------------------------
                                 echo DOXYGEN:
+                                echo ls
                                 ${doxygen}
                         """
 
