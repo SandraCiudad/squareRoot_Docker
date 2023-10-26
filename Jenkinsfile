@@ -126,7 +126,7 @@ pipeline {
                             sh """
                                 ssh ${remoteConnection} ${dockerCompose}  
                             """
-                            sh label: '', script: """cd /home/ci/Documentos && docker exec -it deb_analysis9_1 bash	
+                            sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos && docker exec -it deb_analysis9_1 bash	
                                     echo
                                     echo
                                     ls
