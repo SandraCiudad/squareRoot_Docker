@@ -124,7 +124,7 @@ pipeline {
                                 
                             '''*/
                             sh label: '', script: """ssh ${remoteConnection} ls 
-                                cd /home/ci/Documentos
+                                
                                 ${dockerCompose}
                                 docker run -d --name deb_analysis + ${docker_image}
                                 docker ps
