@@ -97,10 +97,13 @@ pipeline {
                     def remoteCommand = 'docker run -d' + docker_image
 
 
-                    sshagent(credentials: ['ssh_agent_credentials']){
-                        script{
-                            sh 'sshpass -p AxoPmd4! ssh ci@192.168.29.79 ls'
-                        }
+                    sshagent(credentials: ['ssh_dockerAgent_credentials']){
+                        
+                        sh '''
+                            ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1
+                            ssh ci@192.168.29.79 ls
+                        '''
+                        
                         
                     }     
                     
