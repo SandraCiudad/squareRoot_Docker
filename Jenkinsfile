@@ -134,6 +134,7 @@ pipeline {
                             def command_toRun = "ls"
                             def cmd = "ssh ${remoteConnection} docker exec ${container_name} ${command_toRun}" 
                             sh (script: cmd, returnStatus: true)
+
                             
                             /*"""
                                 docker exec -ti deb_analysis9_1 -u root /bin/bash
