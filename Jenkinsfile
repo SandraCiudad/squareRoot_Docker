@@ -108,126 +108,42 @@ pipeline {
                         def remoteCommand = 'docker run -d --name deb_analysis ' + docker_image
                         def dockerCompose = 'docker-compose up -d'
                         //Analysis
-                        def rm_cccc = 'rm -rf reports/cccc' 
-                        def rm_doxygen = 'rm -rf reports/doxygen'
-                        def cppcheck = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                        def cccc = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
-                        def cpd = '/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml'
-                        def doxygen = 'mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'
-                        def valgrind = ' valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'
+                        def rm_cccc = "rm -rf reports/cccc" 
+                        def rm_doxygen = "rm -rf reports/doxygen"
+                        def cppcheck = "cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml"
+                        def cccc = "cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc"
+                        def cpd = "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
+                        def doxygen = "mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports"
+                        def valgrind = "valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos"
 
                         sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
-                            sh """
-                                ssh ${remoteConnection} docker-compose up -d
-                                ssh ${remoteConnection} docker ps -a 
-                            """
-                            /*sh label: '', script: """ ssh ${remoteConnection} docker  exec -i deb_analysis9_1 /bin/bash 
-                                    ls
-                                    echo dentro del container??
-                                    echo
-                                    exit
-                                
-                            """*/
+                            sh """ ssh ${remoteConnection} docker-compose up -d """
 
                             def container_name = "deb_analysis9_1"
-                            def command_toRun = "ls"
-                            def cmd = "ssh ${remoteConnection} docker exec ${container_name} ${command_toRun}" 
-                            sh (script: cmd, returnStatus: true)
 
-                            
-                            /*"""
-                                docker exec -ti deb_analysis9_1 -u root /bin/bash
-                                
-                                docker ps -a
-                                
-                            """*/
-                            /*sh label: '', script: """ssh ${remoteConnection} cd /home/ci/Documentos/docker-compose up -d && docker exec -it deb_analysis9_1 bash	
-                                    echo
-                                    echo
-                                    ls
-                                    echo
-                                    echo
-                                    ${rm_cccc}
-                                    ${rm_doxygen}
-                                    echo CPP CHECK:
-                                    ${cppcheck}
-                                    echo CCCC:
-                                    ${cccc}
-                                    echo 
-                                    echo
-                                    echo
-                                    echo --------------------------------------------------
-                                    echo DOXYGEN:
-                                    ls
-                                    ${doxygen}
-                            """*/
+                            sh "echo removing old components..." 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_cccc}", returnStatus: true) 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_doxygen}", returnStatus: true)
+
+                            sh "echo CPP CHECK CODE ANALYSIS" 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cppcheck}", returnStatus: true) 
+
+                            sh "echo CCCC ANALYSIS" 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cccc}", returnStatus: true) 
+
+                            sh "echo CPD ANALYSIS" 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cpd}", returnStatus: true) 
+
+                            sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${doxygen}", returnStatus: true) 
+
+                            sh "echo RUNNING VALGRIND" 
+                            ls = "ls"
+                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${ls}", returnStatus: true) 
+
+                        }   
                     }
-                    
-
-                        /*
-
-                        // CPPCheck Code Analysis
-                        sh '''ssh ci@192.168.29.79 cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
-
-                        // CCCC Code Analysis
-                        sh '''ssh ci@192.168.29.79 cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
-
-                        script {
-
-                            try {
-                                sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
-                            }
-                            catch(e)
-                            {
-                                currentBuild.result = 'SUCCESS'
-                            }
-                        }
-                        
-                        // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
-                        sh '''ssh ci@192.168.29.79 mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
-
-                        // Run Valgrind
-                        dir("${env.WORKSPACE}/build") {
-                            sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
-                        }
-                        sh '''ssh ci@192.168.29.79 valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
-                    }    
-                    */
-                        
-                    } 
-                    
-                    
-
-                    /*def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                    def cccc_command = 'cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'
-                    def cpd_command = "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
-                    def doxygen_command = "mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports"    
-                    def valgrind_command = "valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos"
-                    
-                    sshagent(credentials: [docker_SSH_conection]){
-                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 docker run -d debian_cppcheck:9.1"
-                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cppcheck_command}"
-                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 cd /home/ci/Documentos/compartir/squareRoot_docker/ && ${cccc_command}"
-
-                        script {
-                            try {
-                                sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${cpd_command}"
-                            }
-                            catch(e)
-                            {
-                                currentBuild.result = 'SUCCESS'
-                            }
-                        }
-
-                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${doxygen_command}"
-
-                        dir("${env.WORKSPACE}/build") {
-                            sh 'sshpass AxoPmd4! ssh ci@192.168.29.79 cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
-                        }
-                        sh "sshpass AxoPmd4! ssh ci@192.168.29.79 ${valgrind_command}" 
-                    }*/
-
                 }
             }
         }
@@ -248,10 +164,7 @@ pipeline {
                 
                 script {
 
-                    def sshKeyFile = env.SSH_KEY
                     def cppcheck_command = 'cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'
-                    
-                    sh "sshpass -p AxoPmd4! ssh -i $sshKeyFile ci@192.168.29.79 ${cppcheck_command}"
 
                     dir("${env.WORKSPACE}") {
                         
