@@ -77,8 +77,6 @@ pipeline {
                         archiveArtifacts artifacts: "${TEST_SWR}/Release_PC/${ARTIFACT_TEST}", followSymlinks: false, onlyIfSuccessful: true
                         archiveArtifacts artifacts: "${TEST_SWR}/Debug_PC/${ARTIFACT_TEST}", followSymlinks: false, onlyIfSuccessful: true
                         */
-                        sh 'cmake -S . -B build'
-                        sh 'cmake --build build'
                         sh 'make || true'
 
                     }
