@@ -119,11 +119,10 @@ pipeline {
                         sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
                             sh """ ssh ${remoteConnection} docker-compose up -d """
-
-                            dir("/var/lib/jenkins/workspace/squareRoot_docker"){
-                                sh """ ssh ${remoteConnection} ls """    
-                            }
                             
+                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
+                            def sshCommand = "ssh $remoteConnection 'ls $remoteFolderPath'"
+                            sh(script: sshCommand, returnStatus: true)
 
                             def container_name = "deb_analysis9_1"
 
