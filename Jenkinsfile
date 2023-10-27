@@ -120,31 +120,30 @@ pipeline {
                             
                             sh """ ssh ${remoteConnection} docker-compose up -d """
                             
-                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
-                            def sshCommand = "ssh $remoteConnection 'ls $remoteFolderPath'"
-                            sh(script: sshCommand, returnStatus: true)
-
                             def container_name = "deb_analysis9_1"
-
-                            sh "echo removing old components..." 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_cccc}", returnStatus: true) 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_doxygen}", returnStatus: true)
+                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
+                            
+                            sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
+                            
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cppcheck}", returnStatus: true) 
+                            sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo CCCC ANALYSIS" 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cccc}", returnStatus: true) 
+                            sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
 
                             sh "echo CPD ANALYSIS" 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${cpd}", returnStatus: true) 
+                            sh(script: "ssh $remoteConnection '$cpd $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${doxygen}", returnStatus: true) 
+                            sh(script: "ssh $remoteConnection '$doxygen $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo RUNNING VALGRIND" 
-                            ls = "ls"
-                            sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${ls}", returnStatus: true) 
+                            def cp_tests = 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                            def remoteFolderPath_build = '/var/lib/jenkins/workspace/squareRoot_docker/build'
+                            sh(script: "ssh $remoteConnection '$cp_tests $remoteFolderPath_build'", returnStatus: true) 
+                            sh(script: "ssh $remoteConnection '$valgrind $remoteFolderPath'", returnStatus: true)  
 
                         }   
                     }
@@ -199,7 +198,7 @@ pipeline {
                         dir("${env.WORKSPACE}/build") {
                             sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         }
-                        sh '''ssh ci@192.168.29.79 valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                     }
 
                 }
