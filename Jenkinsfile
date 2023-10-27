@@ -119,13 +119,10 @@ pipeline {
                         sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
                             sh """ ssh ${remoteConnection} docker-compose up -d """
+                            sh """ ssh ${remoteConnection} ls """
 
                             def container_name = "deb_analysis9_1"
-
-                            sh "without access" 
-                            ls_cmd = "ls"
-                            sh (script: "ssh ${remoteConnection} ${ls_cmd}", returnStatus: true) 
-
+                            
                             sh "echo removing old components..." 
                             sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_cccc}", returnStatus: true) 
                             sh (script: "ssh ${remoteConnection} docker exec ${container_name} ${rm_doxygen}", returnStatus: true)
