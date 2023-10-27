@@ -121,8 +121,8 @@ pipeline {
                             def container_name = "deb_analysis9_1"
                             def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
                             
-                            sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
-                            sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
                             
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
