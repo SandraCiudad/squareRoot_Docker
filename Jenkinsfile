@@ -126,8 +126,8 @@ pipeline {
                             sh(script: "ssh $remoteConnection 'mkdir -p reports $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection 'mkdir -p doc $remoteFolderPath'", returnStatus: true)
 
-                            //sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
-                            //sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
                             
                             /*sh "echo in reports folder" 
                             sh(script: "ssh $remoteConnection 'ls /var/lib/jenkins/workspace/squareRoot_docker/reports'", returnStatus: true)
