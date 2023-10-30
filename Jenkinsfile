@@ -119,7 +119,7 @@ pipeline {
                             sh """ ssh ${remoteConnection} docker-compose up -d """
                             
                             def container_name = "deb_analysis9_1"
-                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
+                            def remoteFolderPath = '/var/lib/jenkins'
                 
                             
                             //sh(script: "ssh $remoteConnection 'mkdir -p workspace $remoteFolderPath'", returnStatus: true)
