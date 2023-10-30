@@ -267,12 +267,12 @@ pipeline {
                     sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                 }
 
-                script{
+                /*script{
                     def sshKeyFile = env.SSH_KEY
                     def command = './executeTests --gtest_output=xml'
                     
                     sh "sshpass -p AxoPmd4! ssh -i $sshKeyFile ci@192.168.29.79 ${cppcheck_command}"
-                }
+                }*/
                 /*dir("${env.WORKSPACE}") 
                 {
                     sh './executeTests --gtest_output=xml'
