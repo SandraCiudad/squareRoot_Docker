@@ -105,6 +105,7 @@ pipeline {
                         def docker_image = 'debian_cppcheck:9.1'
                         def remoteCommand = 'docker run -d --name deb_analysis ' + docker_image
                         def dockerCompose = 'docker-compose up -d'
+                        def insideContainer = 'docker exec -i deb_analysis9_1 '
                         //Analysis
                         def rm_cccc = 'rm -rf reports/cccc' 
                         def rm_doxygen = 'rm -rf reports/doxygen'
@@ -119,12 +120,12 @@ pipeline {
                             sh """ ssh ${remoteConnection} docker-compose up -d """
                             
                             def container_name = "deb_analysis9_1"
-                            def remoteFolderPath = '/var/lib/jenkins'
+                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
                 
                             
                             //sh(script: "ssh $remoteConnection 'mkdir -p workspace $remoteFolderPath'", returnStatus: true)
-                            sh(script: "ssh $remoteConnection 'mkdir -p reports $remoteFolderPath'", returnStatus: true)
-                            sh(script: "ssh $remoteConnection 'mkdir -p doc $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection 'mkdir -p reports $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection 'mkdir -p doc $remoteFolderPath'", returnStatus: true)
 
                             //sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
                             //sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
@@ -140,6 +141,8 @@ pipeline {
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
                             sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection $insideContainer 'ls'", returnStatus: true)
+                            
                             sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo CCCC ANALYSIS" 
