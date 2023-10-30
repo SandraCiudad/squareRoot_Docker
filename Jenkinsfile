@@ -122,7 +122,7 @@ pipeline {
                             def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
                 
                             
-                            sh(script: "ssh $remoteConnection 'mkdir -p workspace $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection 'mkdir -p workspace $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection 'mkdir -p reports $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection 'mkdir -p doc $remoteFolderPath'", returnStatus: true)
 
