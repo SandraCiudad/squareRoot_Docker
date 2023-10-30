@@ -140,19 +140,19 @@ pipeline {
                             
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
-                            sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
-                            sh(script: "ssh $remoteConnection $cppcheck", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection $cppcheck", returnStatus: true)
                             //$insideContainer
                             //sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo CCCC ANALYSIS" 
-                            sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
+                            //sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
 
                             //sh "echo CPD ANALYSIS" 
                             //sh(script: "ssh $remoteConnection '$cpd $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
-                            sh(script: "ssh $remoteConnection '$doxygen $remoteFolderPath'", returnStatus: true) 
+                            //sh(script: "ssh $remoteConnection '$doxygen $remoteFolderPath'", returnStatus: true) 
 
                             //sh "echo RUNNING VALGRIND" 
                             //def cp_tests = 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
@@ -231,6 +231,18 @@ pipeline {
                 }
             }
             
+            dir("${env.WORKSPACE}") {
+                        
+                        sh '''rm -rf reports/cccc'''
+                        sh '''rm -rf reports/doxygen'''
+
+                        // CPPCheck Code Analysis
+                        sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+
+                        // CCCC Code Analysis
+                        sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+            }
+
             steps {
                 script{
                     def sshKeyFile = env.SSH_KEY
