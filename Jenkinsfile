@@ -258,7 +258,7 @@ pipeline {
                     }
                         
                     // Generate Doxygen documentation                                  //modifica parámetros en el doxyfile (nombre)
-                    sh '''ssh ci@192.168.29.79 mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
+                    sh '''mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'''
 
                     // Run Valgrind
                     dir("${env.WORKSPACE}/build") {
