@@ -124,26 +124,29 @@ pipeline {
                             //sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
                             //sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
                             
+                            sh "echo REMOVING COMPONENTS" 
+                            sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
                             sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
-                            /*sh "echo CCCC ANALYSIS" 
+                            sh "echo CCCC ANALYSIS" 
                             sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
 
-                            sh "echo CPD ANALYSIS" 
-                            sh(script: "ssh $remoteConnection '$cpd $remoteFolderPath'", returnStatus: true) 
+                            //sh "echo CPD ANALYSIS" 
+                            //sh(script: "ssh $remoteConnection '$cpd $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
                             sh(script: "ssh $remoteConnection '$doxygen $remoteFolderPath'", returnStatus: true) 
 
-                            sh "echo RUNNING VALGRIND" 
-                            def cp_tests = 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
-                            def remoteFolderPath_build = '/var/lib/jenkins/workspace/squareRoot_docker/build'
-                            sh(script: "ssh $remoteConnection '$cp_tests $remoteFolderPath_build'", returnStatus: true) 
-                            sh(script: "ssh $remoteConnection '$valgrind $remoteFolderPath'", returnStatus: true)  
-                            */
+                            //sh "echo RUNNING VALGRIND" 
+                            //def cp_tests = 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
+                            //def remoteFolderPath_build = '/var/lib/jenkins/workspace/squareRoot_docker/build'
+                            //sh(script: "ssh $remoteConnection '$cp_tests $remoteFolderPath_build'", returnStatus: true) 
+                            //sh(script: "ssh $remoteConnection '$valgrind $remoteFolderPath'", returnStatus: true)  
+                            
                         }   
                     }
                 }
