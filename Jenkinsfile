@@ -141,9 +141,9 @@ pipeline {
 
                             sh "echo CPP CHECK CODE ANALYSIS" 
                             sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
-                            sh(script: "ssh $remoteConnection $insideContainer 'ls'", returnStatus: true)
+                            sh(script: "ssh $remoteConnection $insideContainer $cppcheck", returnStatus: true)
                             
-                            sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
+                            //sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
                             sh "echo CCCC ANALYSIS" 
                             sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
