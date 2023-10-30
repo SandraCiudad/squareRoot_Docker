@@ -241,6 +241,7 @@ pipeline {
                     sh '''rm -rf reports/doxygen'''
 
                     // CPPCheck Code Analysis
+                    sh '''ls'''
                     sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
 
                             // CCCC Code Analysis
