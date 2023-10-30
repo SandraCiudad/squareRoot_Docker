@@ -128,6 +128,9 @@ pipeline {
                             sh(script: "ssh $remoteConnection '$rm_cccc $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection '$rm_doxygen $remoteFolderPath'", returnStatus: true)
 
+                            sh "echo in reports folder" 
+                            sh(script: "ssh $remoteConnection 'ls /var/lib/jenkins/workspace/squareRoot_docker/reports'", returnStatus: true)
+
                             sh "echo CPP CHECK CODE ANALYSIS" 
                             sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
                             sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
