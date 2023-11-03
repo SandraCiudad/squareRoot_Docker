@@ -263,21 +263,11 @@ pipeline {
                     // Run Valgrind
                     dir("${env.WORKSPACE}/build") {
                         sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
-                        sh '''ls'''
                         sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                         sh '''./executeTests --gtest_output=xml'''
                     }
-                    
-                    //sh './executeTests --gtest_output=xml'
                 
                 }
-
-                /*script{
-                    def sshKeyFile = env.SSH_KEY
-                    def command = './executeTests --gtest_output=xml'
-                    
-                    sh "sshpass -p AxoPmd4! ssh -i $sshKeyFile ci@192.168.29.79 ${cppcheck_command}"
-                }*/
             }
         } // Stage Tests
         
@@ -286,12 +276,9 @@ pipeline {
             steps {
 
                 dir("${env.WORKSPACE}") {
-                    sh '''echo reports'''
-                    sh '''ls'''
+                    //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
-                    publishCppcheck pattern: "reports/project_cppcheck.xml"
-
-                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
@@ -309,7 +296,7 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
 
                 /*dir("${env.WORKSPACE}/reports") {
