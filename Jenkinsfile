@@ -296,7 +296,9 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])              
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])  
+                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                }            
 
                 }
                 /*dir("${env.WORKSPACE}/reports"){
@@ -323,8 +325,7 @@ pipeline {
                 }*/
 
             }
-            step([$class: 'JUnitResultArchiver', testResults: '/var/lib/jenkins/workspace/squareRoot_docker/reports/*.xml'])
-
+            
         } // Stage Reports
 
     } // Stages
