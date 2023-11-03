@@ -303,14 +303,14 @@ pipeline {
                 }
                 
                 
-                dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
+                /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
                     sh'ls -a'
                     junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
-                }
+                }*/
 
-                /*dir("${env.WORKSPACE}") {
+                dir("/var/lib/jenkins/workspace/squareRoot_docker/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -325,7 +325,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }*/
+                }
 
             }
 
