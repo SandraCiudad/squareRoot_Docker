@@ -298,18 +298,12 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
                     
                     
-                    
-                    
-
-                }
-                dir(".") {
-                    sh 'ls'
                     publishCppcheck pattern: "/reports/project_cppcheck.xml"
+                    
 
-                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
-                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
-                dir("../../reports") {
+
+                dir("/reports") {
                     sh 'ls'
                     //publishCppcheck pattern: "project_cppcheck.xml"
 
