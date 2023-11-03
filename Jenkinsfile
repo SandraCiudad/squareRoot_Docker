@@ -277,7 +277,8 @@ pipeline {
                 }*/
                 dir("${env.WORKSPACE}") 
                 {
-                    sh './executeTests --gtest_output=xml'
+                    sh '''ls'''
+                    sh '''./executeTests --gtest_output=xml'''
                 }
             }
         } // Stage Tests
