@@ -241,7 +241,7 @@ pipeline {
                     sh '''rm -rf reports/doxygen'''
 
                     // CPPCheck Code Analysis
-                    sh '''cppcheck --enable=all --inconclusive `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.html'''
+                    sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
 
                     // CCCC Code Analysis
                     sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
@@ -285,7 +285,7 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE}/reports") {
+                dir("${env.WORKSPACE}") {
 
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
@@ -307,33 +307,23 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
-                    sh '''xsltproc project_cpd.xml -o cpd.html'''
-                    sh '''xsltproc project_cppcheck.xml -o cppcheck.html'''
-                    sh '''xsltproc project_valgrind.xml -o valgrind.html'''
 
-                    publishHTML([allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: '.', 
-                                reportFiles: 'cpd.html', 
-                                reportName: 'CPD Report', 
-                                reportTitles: 'CPD Report'])
+                    post {         
+                        always {             
+                            // Publica el archivo XML como informe HTML             
+                            publishHTML(target: [                 
+                                allowMissing: false,                 
+                                alwaysLinkToLastBuild: false,                 
+                                keepAll: true,                 
+                                reportDir: 'reports',                 
+                                reportFiles: 'project_cpd.xml',                 
+                                reportName: 'CPD Report'             
+                                ])         
+                            }     
+                        }
 
-                    publishHTML([allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: '.', 
-                                reportFiles: 'cppcheck.html', 
-                                reportName: 'Cpp Check Report', 
-                                reportTitles: 'Cpp Check Report'])
 
-                    publishHTML([allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: '.', 
-                                reportFiles: 'valgrind.html', 
-                                reportName: 'Valgrind Report', 
-                                reportTitles: 'Valgrind Report'])
+                    
 
                     //xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
                 }
