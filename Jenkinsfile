@@ -277,6 +277,27 @@ pipeline {
                 }
             }
         } // Stage Tests
+
+        stage ('TEST'){
+
+            agent {
+                docker { 
+                    image env.ANALYSIS_DOCKER_IMAGE         
+                    args env.DOCKER_ARGS
+                    reuseNode true
+                }
+            }
+
+            steps{
+                dir("${env.WORKSPACE}.") 
+                {
+                    dir('build'){
+                        junit 'test_detail.xml'
+                    }
+                    //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
+                }
+            }
+        }
         
         stage('Reports') {
             
@@ -286,7 +307,7 @@ pipeline {
 
                 dir("${env.WORKSPACE}") {
 
-                    publishCppcheck pattern: "reports/project_cppcheck.xml"
+                    //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
                     recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
