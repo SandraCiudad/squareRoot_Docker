@@ -298,7 +298,7 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
                     
                     
-                    publishCppcheck pattern: "/reports/project_cppcheck.xml"
+                    publishCppcheck pattern: "../../reports/project_cppcheck.xml"
                     
 
                 }
