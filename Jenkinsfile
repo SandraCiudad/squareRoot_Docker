@@ -278,26 +278,6 @@ pipeline {
             }
         } // Stage Tests
 
-        stage ('TEST'){
-
-            agent {
-                docker { 
-                    image env.ANALYSIS_DOCKER_IMAGE         
-                    args env.DOCKER_ARGS
-                    reuseNode true
-                }
-            }
-
-            steps{
-                dir("${env.WORKSPACE}.") 
-                {
-                    dir('build'){
-                        junit 'test_detail.xml'
-                    }
-                    //sh "./RUN_ALL_TESTS_WITH_OUTPUT.sh"
-                }
-            }
-        }
         
         stage('Reports') {
             
@@ -358,6 +338,11 @@ pipeline {
                     //xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
                 }
 
+                dir("${env.WORKSPACE}/build") 
+                {
+                    junit 'test_detail.xml'
+                }
+
                 /*dir("${env.WORKSPACE}/reports") {
 
 
@@ -377,7 +362,6 @@ pipeline {
                     )
                 }*/
 
-                junit 'junitTestBasicMathResults.xml'
 
             }
 
