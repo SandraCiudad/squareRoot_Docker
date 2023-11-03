@@ -235,7 +235,7 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE/squareRoot_docker}") {
+                dir("${env.WORKSPACE}") {
                         
                     //sh '''rm -rf reports/cccc'''
                     //sh '''rm -rf reports/doxygen'''
