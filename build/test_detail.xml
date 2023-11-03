@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="2" failures="0" disabled="0" errors="0" time="0.04" timestamp="2023-11-03T10:51:12" name="AllTests">
+  <testsuite name="SquareRootTest" tests="2" failures="0" disabled="0" errors="0" time="0.015" timestamp="2023-11-03T10:51:12">
+    <testcase name="PositiveNos" status="run" result="completed" time="0.009" timestamp="2023-11-03T10:51:12" classname="SquareRootTest" />
+    <testcase name="NegativeNos" status="run" result="completed" time="0.002" timestamp="2023-11-03T10:51:12" classname="SquareRootTest" />
+  </testsuite>
+</testsuites>
