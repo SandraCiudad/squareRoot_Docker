@@ -298,16 +298,17 @@ pipeline {
                     
                     //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                     
-                    junit allowEmptyResults: true, testResults: '../../reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    
 
                 }
                 
                 
-                /*dir("${env.WORKSPACE}/reports"){
+                dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
                     sh'ls -a'
+                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
-                }*/
+                }
 
                 /*dir("${env.WORKSPACE}") {
                     publishValgrind (
