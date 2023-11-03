@@ -305,11 +305,11 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE}") {
+                dir("${env.WORKSPACE}/reports") {
 
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
-                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
@@ -327,10 +327,40 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
-                    xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
+                    sh '''xsltproc project_cpd.xml -o cpd.html'''
+                    sh '''xsltproc project_cppcheck.xml -o cppcheck.html'''
+                    sh '''xsltproc project_valgrind.xml -o valgrind.html'''
+
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: '.', 
+                                reportFiles: 'cpd.html', 
+                                reportName: 'CPD Report', 
+                                reportTitles: 'CPD Report'])
+
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: '.', 
+                                reportFiles: 'cppcheck.html', 
+                                reportName: 'Cpp Check Report', 
+                                reportTitles: 'Cpp Check Report'])
+
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: '.', 
+                                reportFiles: 'valgrind.html', 
+                                reportName: 'Valgrind Report', 
+                                reportTitles: 'Valgrind Report'])
+
+                    //xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
                 }
 
-                dir("${env.WORKSPACE}/reports") {
+                /*dir("${env.WORKSPACE}/reports") {
+
+
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -345,7 +375,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
                 junit 'junitTestBasicMathResults.xml'
 
