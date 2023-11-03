@@ -300,7 +300,7 @@ pipeline {
 
                 }
                 dir("${env.WORKSPACE}/reports"){
-
+                    sh'ls'
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
                 }
