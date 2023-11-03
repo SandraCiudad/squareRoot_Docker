@@ -266,6 +266,9 @@ pipeline {
                         sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                         sh '''./executeTests --gtest_output=xml'''
                     }
+
+                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    junit '/reports/project_cppcheck.xml'
                 
                 }
             }
