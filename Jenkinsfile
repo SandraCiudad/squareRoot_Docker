@@ -280,6 +280,7 @@ pipeline {
                 dir("${env.WORKSPACE}/reports") {
                     
                     sh 'ls'
+                    sh'cat project_cppcheck.xml'
                     junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
                     
 
