@@ -297,13 +297,29 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
                     
                     //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: 'reports', 
+                                reportFiles: 'project_cppcheck.xml', 
+                                reportName: 'Cpp Check Report', 
+                                reportTitles: 'Cpp Check Report'])
+
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: 'reports', 
+                                reportFiles: 'project_valgrind.xml', 
+                                reportName: 'Valgrind Report', 
+                                reportTitles: 'Valgrind Report'])                    
 
                 }
-                dir("${env.WORKSPACE}/reports"){
+                /*dir("${env.WORKSPACE}/reports"){
                     sh'ls -a'
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
-                }
+                }*/
 
                 /*dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
