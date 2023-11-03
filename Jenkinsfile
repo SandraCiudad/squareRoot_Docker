@@ -276,9 +276,9 @@ pipeline {
             steps {
 
                 dir("${env.WORKSPACE}") {
-                    //publishCppcheck pattern: "reports/project_cppcheck.xml"
+                    publishCppcheck pattern: "reports/project_cppcheck.xml"
 
-                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
@@ -310,7 +310,7 @@ pipeline {
                     junit 'project_valgrind.xml'
                 }*/
 
-                dir("/var/lib/jenkins/workspace/squareRoot_docker/reports") {
+                /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -325,7 +325,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
             }
 
