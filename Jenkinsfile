@@ -299,8 +299,8 @@ pipeline {
                     //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
 
                 }
-                dir("${env.WORKSPACE}reports/"){
-                    sh'ls'
+                dir("${env.WORKSPACE}/reports"){
+                    sh'ls -a'
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
                 }
