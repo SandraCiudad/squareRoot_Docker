@@ -273,20 +273,15 @@ pipeline {
         
         stage('Reports') {
             
-            agent {
-                docker { 
-                    image env.ANALYSIS_DOCKER_IMAGE         
-                    args env.DOCKER_ARGS
-                    reuseNode true
-                }
-            }
+            
 
             steps {
 
                 dir("${env.WORKSPACE}") {
-                    publishCppcheck pattern: "reports/project_cppcheck.xml"
+                    sh 'ls'
+                    //publishCppcheck pattern: "reports/project_cppcheck.xml"
 
-                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
+                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
