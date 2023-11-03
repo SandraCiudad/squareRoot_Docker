@@ -282,9 +282,10 @@ pipeline {
                     //publishCppcheck pattern: "project_cppcheck.xml"
 
                     //recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
-                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
                 }
-                
+
                 dir("${env.WORKSPACE}") {
                     
                     
@@ -316,7 +317,7 @@ pipeline {
                 
                 /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
                     sh'ls -a'
-                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    
                     junit 'project_cppcheck.xml'
                     junit 'project_valgrind.xml'
                 }*/
