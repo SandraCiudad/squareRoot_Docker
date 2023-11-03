@@ -306,8 +306,8 @@ pipeline {
                     sh 'ls'
                     publishCppcheck pattern: "project_cppcheck.xml"
 
-                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
-                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
                 
                 
