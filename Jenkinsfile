@@ -311,7 +311,8 @@ pipeline {
 
                     step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
-
+                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    
                     /*post {         
                         always {             
                             // Publica el archivo XML como informe HTML             
@@ -329,7 +330,7 @@ pipeline {
 
                     
 
-                    //xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
+                    
                 }
 
                 dir("${env.WORKSPACE}/build") 
