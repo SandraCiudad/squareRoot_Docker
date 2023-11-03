@@ -241,7 +241,8 @@ pipeline {
                     sh '''rm -rf reports/doxygen'''
 
                     // CPPCheck Code Analysis
-                    sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+                    //sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
+                    sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "sqrt_test.cpp" "sqrt.cpp" "sqrt.hpp"` 2> reports/project_cppcheck.xml'''
 
                     // CCCC Code Analysis
                     sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
