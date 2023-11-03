@@ -298,18 +298,18 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
                     
                     
-                    publishCppcheck pattern: "../../reports/project_cppcheck.xml"
+                    //publishCppcheck pattern: "../../reports/project_cppcheck.xml"
                     
 
                 }
 
-                /*dir("/reports") {
+                dir("/reports") {
                     sh 'ls'
                     //publishCppcheck pattern: "project_cppcheck.xml"
 
                     //recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
                     xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                }*/
+                }
                 
                 
                 /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
