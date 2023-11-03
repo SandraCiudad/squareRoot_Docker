@@ -266,9 +266,6 @@ pipeline {
                         sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                         sh '''./executeTests --gtest_output=xml'''
                     }
-
-                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
-                    junit '/reports/project_cppcheck.xml'
                 
                 }
             }
@@ -280,16 +277,16 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE}") {
+                dir("${env.WORKSPACE}/reports") {
                     
+                    sh 'ls'
+                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
                     
-                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
-                    junit '/reports/project_cppcheck.xml'
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
-                                reportDir: 'reports/cccc', 
+                                reportDir: 'cccc', 
                                 reportFiles: 'index.html', 
                                 reportName: 'CCCC Report', 
                                 reportTitles: 'The CCCC report'])
@@ -297,7 +294,7 @@ pipeline {
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
-                                reportDir: 'reports/doxygen/html', 
+                                reportDir: 'doxygen/html', 
                                 reportFiles: 'index.html', 
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
