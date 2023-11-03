@@ -312,6 +312,7 @@ pipeline {
                     step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
                     xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+
                     
                     /*post {         
                         always {             
