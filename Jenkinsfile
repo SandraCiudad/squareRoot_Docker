@@ -302,7 +302,7 @@ pipeline {
                     
 
                 }
-                dir("${env.WORKSPACE}/reports") {
+                dir("var/lib/jenkins/workspace/squareRoot_docker/reports") {
                     sh 'ls'
                     publishCppcheck pattern: "project_cppcheck.xml"
 
