@@ -302,7 +302,7 @@ pipeline {
                     
 
                 }
-                dir("../..") {
+                dir(".") {
                     sh 'ls'
                     publishCppcheck pattern: "/reports/project_cppcheck.xml"
 
