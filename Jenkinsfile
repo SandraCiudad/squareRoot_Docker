@@ -307,8 +307,12 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
+                    
 
-                    post {         
+                    step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
+
+
+                    /*post {         
                         always {             
                             // Publica el archivo XML como informe HTML             
                             publishHTML(target: [                 
@@ -316,11 +320,11 @@ pipeline {
                                 alwaysLinkToLastBuild: false,                 
                                 keepAll: true,                 
                                 reportDir: 'reports',                 
-                                reportFiles: 'project_cpd.xml',                 
+                                reportFiles: '',                 
                                 reportName: 'CPD Report'             
                                 ])         
                             }     
-                        }
+                    }*/
 
 
                     
