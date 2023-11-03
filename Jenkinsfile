@@ -298,7 +298,7 @@ pipeline {
                     
                     //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                     
-                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    junit allowEmptyResults: true, testResults: '../../reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
 
                 }
                 
@@ -309,7 +309,7 @@ pipeline {
                     junit 'project_valgrind.xml'
                 }*/
 
-                dir("${env.WORKSPACE}/reports") {
+                /*dir("${env.WORKSPACE}") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -324,7 +324,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
             }
 
