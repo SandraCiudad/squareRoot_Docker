@@ -1,3 +1,0 @@
-/home/ci/Documentos/GitHub/squareRoot_Docker/build/CMakeFiles/rebuild_cache.dir
-/home/ci/Documentos/GitHub/squareRoot_Docker/build/CMakeFiles/edit_cache.dir
-/home/ci/Documentos/GitHub/squareRoot_Docker/build/CMakeFiles/executeTests.dir
