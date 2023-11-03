@@ -296,23 +296,7 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                    
-                    publishHTML([allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: 'reports', 
-                                reportFiles: 'project_cppcheck.xml', 
-                                reportName: 'Cpp Check Report', 
-                                reportTitles: 'Cpp Check Report'])
-
-                    publishHTML([allowMissing: false, 
-                                alwaysLinkToLastBuild: true, 
-                                keepAll: true, 
-                                reportDir: 'reports', 
-                                reportFiles: 'project_valgrind.xml', 
-                                reportName: 'Valgrind Report', 
-                                reportTitles: 'Valgrind Report'])                    
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])              
 
                 }
                 /*dir("${env.WORKSPACE}/reports"){
@@ -339,6 +323,7 @@ pipeline {
                 }*/
 
             }
+            step([$class: 'JUnitResultArchiver', testResults: '/var/lib/jenkins/workspace/squareRoot_docker/reports/*.xml'])
 
         } // Stage Reports
 
