@@ -277,18 +277,11 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE}/reports") {
-                    sh 'ls'
-                    //publishCppcheck pattern: "project_cppcheck.xml"
-
-                    //recordIssues(enabledForFailure: true, tool: cpd(pattern: "project_cpd.xml"))
-                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
-                }
-
                 dir("${env.WORKSPACE}") {
                     
                     
+                    junit allowEmptyResults: true, testResults: '/reports/project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
+                    junit '/reports/project_cppcheck.xml'
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
