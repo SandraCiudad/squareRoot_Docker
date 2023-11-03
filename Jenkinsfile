@@ -296,10 +296,10 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                 }
 
-                /*dir("${env.WORKSPACE}/reports") {
+                dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -314,7 +314,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }*/
+                }
 
             }
 
