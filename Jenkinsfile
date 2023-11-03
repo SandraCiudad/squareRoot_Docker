@@ -241,16 +241,15 @@ pipeline {
                     sh '''rm -rf reports/doxygen'''
 
                     // CPPCheck Code Analysis
-                    sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.cpp" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
-                    //sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "sqrt*.cpp" "sqrt.cpp" "sqrt.hpp"` 2> reports/project_cppcheck.xml'''
+                    sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
 
                     // CCCC Code Analysis
-                    sh '''cccc --html_outfile=index.html `find "." -name "*.cpp" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
+                    sh '''cccc --html_outfile=index.html `find "." -name "*.c*" | grep -v ".svn" | grep -v ".cccc" | grep -v ".settings" | grep -v ".cproject"`; mv .cccc reports/cccc; mv index.html reports/cccc'''
 
                     script {
 
                         try {
-                            sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/project/$PROJECT_SRC --format xml 1> reports/project_cpd.xml"
+                            sh "/home/root/pmd/pmd-bin-6.47.0/bin/run.sh cpd --minimum-tokens 20 --language cpp --files /var/lib/jenkins/workspace/squareRoot_docker --format xml 1> reports/project_cpd.xml"
                         }
                         catch(e)
                         {
@@ -268,6 +267,13 @@ pipeline {
                         sh '''./executeTests --gtest_output=xml'''
                     }
                 
+
+                dir("${env.WORKSPACE}.") 
+                {
+                    dir('build'){
+                        junit 'test_detail.xml'
+                    }
+                }
                 }
             }
         } // Stage Tests
@@ -278,17 +284,16 @@ pipeline {
 
             steps {
 
-                dir("${env.WORKSPACE}/reports") {
-                    
-                    sh 'ls'
-                    sh'cat project_cppcheck.xml'
-                    junit allowEmptyResults: true, testResults: 'project_cppcheck.xml', skipPublishingChecks: true, skipMarkingBuildUnstable: true
-                    
+                dir("${env.WORKSPACE}") {
+
+                    publishCppcheck pattern: "reports/project_cppcheck.xml"
+
+                    recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
-                                reportDir: 'cccc', 
+                                reportDir: 'reports/cccc', 
                                 reportFiles: 'index.html', 
                                 reportName: 'CCCC Report', 
                                 reportTitles: 'The CCCC report'])
@@ -296,28 +301,15 @@ pipeline {
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
-                                reportDir: 'doxygen/html', 
+                                reportDir: 'reports/doxygen/html', 
                                 reportFiles: 'index.html', 
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
-                    
-                    
-                    //publishCppcheck pattern: "../../reports/project_cppcheck.xml"
-                    
 
+                    xunit([GoogleTest(excludesPattern: '', pattern: 'gtest/*.xml', stopProcessingIfError: true)])
                 }
 
-                
-                
-                
-                /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports"){
-                    sh'ls -a'
-                    
-                    junit 'project_cppcheck.xml'
-                    junit 'project_valgrind.xml'
-                }*/
-
-                /*dir("/var/lib/jenkins/workspace/squareRoot_docker/reports") {
+                dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -332,7 +324,9 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }*/
+                }
+
+                junit 'junitTestBasicMathResults.xml'
 
             }
 
