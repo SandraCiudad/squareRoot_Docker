@@ -264,7 +264,7 @@ pipeline {
                     dir("${env.WORKSPACE}/build") {
                         sh 'cp executeTests /var/lib/jenkins/workspace/squareRoot_docker'
                         sh '''ls'''
-                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
+                        sh '''valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=../reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'''
                         sh '''./executeTests --gtest_output=xml'''
                     }
                     
