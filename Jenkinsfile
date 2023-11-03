@@ -273,6 +273,14 @@ pipeline {
         
         stage('Reports') {
             
+            agent {
+                docker { 
+                    image env.ANALYSIS_DOCKER_IMAGE         
+                    args env.DOCKER_ARGS
+                    reuseNode true
+                }
+            }
+
             steps {
 
                 dir("${env.WORKSPACE}") {
