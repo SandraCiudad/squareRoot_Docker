@@ -115,12 +115,12 @@ pipeline {
                         def doxygen = 'mv /home/root/doxygen/doxyfile /home; cd /home; (cat doxyfile ; echo "PROJECT_NAME=PROJECT") | doxygen -; cd -; mv /home/doxygen reports'
                         def valgrind = ' valgrind --tool=memcheck --leak-check=full --track-origins=yes --xml=yes --xml-file=./reports/project_valgrind.xml ./executeTests --gtest_filter=SquareRootTest.PositiveNos:SquareRootTest.NegativeNos'
 
-                        sshagent(credentials: ['ssh_dockerAgent_credentials']){
+                        //sshagent(credentials: ['ssh_dockerAgent_credentials']){
                             
-                            sh """ ssh ${remoteConnection} docker-compose up -d """
+                            //sh """ ssh ${remoteConnection} docker-compose up -d """
                             
-                            def container_name = "deb_analysis9_1"
-                            def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
+                            //def container_name = "deb_analysis9_1"
+                            //def remoteFolderPath = '/var/lib/jenkins/workspace/squareRoot_docker'
                 
                             
                             //sh(script: "ssh $remoteConnection 'mkdir -p workspace $remoteFolderPath'", returnStatus: true)
@@ -139,19 +139,19 @@ pipeline {
                             */
                             
 
-                            sh "echo CPP CHECK CODE ANALYSIS" 
+                            //sh "echo CPP CHECK CODE ANALYSIS" 
                             //sh(script: "ssh $remoteConnection 'ls $remoteFolderPath'", returnStatus: true)
                             //sh(script: "ssh $remoteConnection $cppcheck", returnStatus: true)
                             //$insideContainer
                             //sh(script: "ssh $remoteConnection '$cppcheck $remoteFolderPath'", returnStatus: true) 
 
-                            sh "echo CCCC ANALYSIS" 
+                            //sh "echo CCCC ANALYSIS" 
                             //sh(script: "ssh $remoteConnection '$cccc $remoteFolderPath'", returnStatus: true)
 
                             //sh "echo CPD ANALYSIS" 
                             //sh(script: "ssh $remoteConnection '$cpd $remoteFolderPath'", returnStatus: true) 
 
-                            sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
+                            //sh "echo GENERATINNG DOXYGEN DOCUMENTATION" 
                             //sh(script: "ssh $remoteConnection '$doxygen $remoteFolderPath'", returnStatus: true) 
 
                             //sh "echo RUNNING VALGRIND" 
@@ -160,7 +160,7 @@ pipeline {
                             //sh(script: "ssh $remoteConnection '$cp_tests $remoteFolderPath_build'", returnStatus: true) 
                             //sh(script: "ssh $remoteConnection '$valgrind $remoteFolderPath'", returnStatus: true)  
                             
-                        }   
+                        //}   
                     }
                 }
             }
@@ -296,10 +296,16 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+
+                }
+                dir("${env.WORKSPACE}/reports"){
+
+                    junit 'project_cppcheck.xml'
+                    junit 'project_valgrind.xml'
                 }
 
-                dir("${env.WORKSPACE}/reports") {
+                /*dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -314,7 +320,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
             }
 
