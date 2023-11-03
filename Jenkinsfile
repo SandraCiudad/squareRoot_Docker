@@ -237,8 +237,8 @@ pipeline {
 
                 dir("${env.WORKSPACE}") {
                         
-                    //sh '''rm -rf reports/cccc'''
-                    //sh '''rm -rf reports/doxygen'''
+                    sh '''rm -rf reports/cccc'''
+                    sh '''rm -rf reports/doxygen'''
 
                     // CPPCheck Code Analysis
                     sh '''cppcheck --enable=all --inconclusive --xml --xml-version=2 `find "." -name "*.c*" | grep -v ".cccc" | grep -v ".svn" | grep -v ".settings" | grep -v ".cproject"` 2> reports/project_cppcheck.xml'''
@@ -285,8 +285,10 @@ pipeline {
             steps {
 
                 dir("${env.WORKSPACE}") {
+                    sh '''echo reports'''
+                    sh '''ls'''
 
-                    //publishCppcheck pattern: "reports/project_cppcheck.xml"
+                    publishCppcheck pattern: "reports/project_cppcheck.xml"
 
                     recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
