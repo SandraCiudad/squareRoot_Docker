@@ -288,6 +288,11 @@ pipeline {
                 dir("${env.WORKSPACE}") {
 
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
+                    dir("/reports"){
+                        junit 'project_cppcheck.xml'
+                        junit 'project_cpd.xml'
+                        junit 'project_valgrind.xml'
+                    }
 
                     //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
@@ -311,7 +316,7 @@ pipeline {
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
-                    xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                    //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
 
 
                     /*post {         
@@ -334,10 +339,6 @@ pipeline {
                     
                 }
 
-                dir("${env.WORKSPACE}/build") 
-                {
-                    junit 'test_detail.xml'
-                }
 
                 /*dir("${env.WORKSPACE}/reports") {
 
