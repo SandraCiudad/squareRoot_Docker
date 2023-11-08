@@ -373,7 +373,7 @@ pipeline {
     } // Stages
     post{
         always {
-            junit 'results/*.xml'
+            junit '/var/lib/jenkins/workspace/squareRoot_docker/workspace/squareRoot_docker/reports/*.xml'
         }
     }
 
