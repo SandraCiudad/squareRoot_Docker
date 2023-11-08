@@ -271,11 +271,18 @@ pipeline {
                     sh 'ls'
                     dir("${env.WORKSPACE}/reports"){
                         sh 'ls'
-                        sh 'cat project_cppcheck.xml'
-                        junit 'project_cppcheck.xml'
-                        junit 'project_cpd.xml'
-                        junit 'project_valgrind.xml'
+                        //sh 'cat project_cppcheck.xml'
+                        //junit 'project_cppcheck.xml'
+                        //junit 'project_cpd.xml'
+                        //junit 'project_valgrind.xml'
                     }
+
+                    junitReporter: {
+                        outputDir: '/reports',
+                        outputFile: 'project_cppcheck.xml',
+                        useBrowserName: false,
+                        xmlVersion: null
+                        }
                     /*dir("${env.WORKSPACE}.") 
                     {
                         dir('build'){
