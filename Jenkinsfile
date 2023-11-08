@@ -267,12 +267,11 @@ pipeline {
                         //sh '''./executeTests --gtest_output=xml'''
                     }
                 
-                    sh "echo en ${env.WORKSPACE}"
-                    sh 'ls'
+                    
                     dir("${env.WORKSPACE}/reports"){
                         sh 'ls'
                         //sh 'cat project_cppcheck.xml'
-                        junit 'project_cppcheck.xml'
+                        //junit 'project_cppcheck.xml'
                         //junit 'project_cpd.xml'
                         //junit 'project_valgrind.xml'
                     }
@@ -291,13 +290,6 @@ pipeline {
         
         stage('Reports') {
             
-            agent {
-                docker { 
-                    image env.ANALYSIS_DOCKER_IMAGE         
-                    args env.DOCKER_ARGS
-                    reuseNode true
-                }
-            }
             
 
             steps {
@@ -346,9 +338,16 @@ pipeline {
                             }     
                     }*/
 
+                    dir("${env.WORKSPACE}/reports"){
 
+                        post{
+                            always {
+                                junit 'test-results/*.xml'
+                            }
+                        }
+
+                    }
                     
-
                     
                 }
 
