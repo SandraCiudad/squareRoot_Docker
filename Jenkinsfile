@@ -318,10 +318,10 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
 
                     post{
-                            always {
+                        always {
                                 junit 'results/*.xml'
                             }
-                        }
+                    }
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
