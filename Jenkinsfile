@@ -317,7 +317,11 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
-                    
+                    post{
+                            always {
+                                junit 'results/*.xml'
+                            }
+                        }
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
@@ -338,15 +342,7 @@ pipeline {
                             }     
                     }*/
 
-                    dir("${env.WORKSPACE}/reports"){
-
-                        post{
-                            always {
-                                junit 'test-results/*.xml'
-                            }
-                        }
-
-                    }
+                    
                     
                     
                 }
