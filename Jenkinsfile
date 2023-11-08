@@ -278,7 +278,7 @@ pipeline {
                     }
 
                     junitReporter: {
-                        outputDir: '/reports',
+                        outputDir: "${env.WORKSPACE}/reports",
                         outputFile: 'project_cppcheck.xml',
                         useBrowserName: false,
                         xmlVersion: null
