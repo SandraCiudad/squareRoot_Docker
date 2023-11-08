@@ -270,6 +270,9 @@ pipeline {
                     
                     dir("${env.WORKSPACE}/reports"){
                         sh 'ls'
+                        sh 'cp project_cpd.xml /var/lib/jenkins/workspace/squareRoot_docker/reports'
+                        sh 'cp project_cppcheck.xml /var/lib/jenkins/workspace/squareRoot_docker/reports'
+                        sh 'cp project_valgrind.xml /var/lib/jenkins/workspace/squareRoot_docker/reports'
                         //sh 'cat project_cppcheck.xml'
                         //junit 'project_cppcheck.xml'
                         //junit 'project_cpd.xml'
