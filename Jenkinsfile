@@ -267,6 +267,8 @@ pipeline {
                         //sh '''./executeTests --gtest_output=xml'''
                     }
                 
+                    sh "echo en ${env.WORKSPACE}"
+                    sh 'ls'
                     dir("/reports"){
                         sh 'ls'
                         junit 'project_cppcheck.xml'
