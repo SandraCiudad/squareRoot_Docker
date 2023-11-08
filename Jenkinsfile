@@ -278,11 +278,11 @@ pipeline {
                     }
 
                     junitReporter: {
-                        outputDir: "${env.WORKSPACE}/reports",
+                        outputDir: '/reports',
                         outputFile: 'project_cppcheck.xml',
                         useBrowserName: false,
                         xmlVersion: null
-                        }
+                    }
                     /*dir("${env.WORKSPACE}.") 
                     {
                         dir('build'){
