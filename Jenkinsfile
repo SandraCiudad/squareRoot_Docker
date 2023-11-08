@@ -368,11 +368,14 @@ pipeline {
 
         } // Stage Reports
 
-        post{
-            always {
-                junit 'results/*.xml'
-            }
-        }
+
 
     } // Stages
+    post{
+        always {
+            junit 'results/*.xml'
+        }
+    }
+
+
 }
