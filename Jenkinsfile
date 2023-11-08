@@ -317,11 +317,7 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
-                    post{
-                        always {
-                                junit 'results/*.xml'
-                            }
-                    }
+                    
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
 
@@ -371,6 +367,12 @@ pipeline {
             }
 
         } // Stage Reports
+
+        post{
+            always {
+                junit 'results/*.xml'
+            }
+        }
 
     } // Stages
 }
