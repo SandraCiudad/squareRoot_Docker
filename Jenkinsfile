@@ -277,7 +277,7 @@ pipeline {
                         //junit 'project_valgrind.xml'
                     }
 
-                    junitReporter: { outputDir: '/reports', outputFile: 'project_cppcheck.xml', useBrowserName: false, xmlVersion: null }
+                    //junitReporter: { outputDir: '/reports', outputFile: 'project_cppcheck.xml', useBrowserName: false, xmlVersion: null }
                     /*dir("${env.WORKSPACE}.") 
                     {
                         dir('build'){
