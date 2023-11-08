@@ -272,7 +272,7 @@ pipeline {
                     dir("${env.WORKSPACE}/reports"){
                         sh 'ls'
                         //sh 'cat project_cppcheck.xml'
-                        //junit 'project_cppcheck.xml'
+                        junit 'project_cppcheck.xml'
                         //junit 'project_cpd.xml'
                         //junit 'project_valgrind.xml'
                     }
