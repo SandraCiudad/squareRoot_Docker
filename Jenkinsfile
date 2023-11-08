@@ -326,13 +326,20 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
+                    publishHTML([allowMissing: false, 
+                                alwaysLinkToLastBuild: true, 
+                                keepAll: true, 
+                                reportDir: 'reports/', 
+                                reportFiles: 'project_cppcheck.xml', 
+                                reportName: 'CPP CHECK Report', 
+                                reportTitles: 'CPP CHECK Report'])
                     
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
-                    dir('/var/lib/jenkins/workspace/squareRoot_docker/workspace/squareRoot_docker/reports'){
+                    /*dir('/var/lib/jenkins/workspace/squareRoot_docker/workspace/squareRoot_docker/reports'){
                         sh 'ls'
                         xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                    }
+                    }*/
                     
 
 
