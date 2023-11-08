@@ -333,10 +333,10 @@ pipeline {
                             transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(html))
                         }
                         */
-                        xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
+                        //xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                     }
                     
-
+                    
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
@@ -346,7 +346,7 @@ pipeline {
                                 reportTitles: 'CPP CHECK Report'])
                     
 
-                    //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
+                    step([$class: 'JUnitResultArchiver', testResults: 'reports/*.xml'])
                     /*dir('/var/lib/jenkins/workspace/squareRoot_docker/workspace/squareRoot_docker/reports'){
                         sh 'ls'
                         xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
