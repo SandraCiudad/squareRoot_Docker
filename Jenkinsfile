@@ -289,6 +289,7 @@ pipeline {
 
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
                     dir("/reports"){
+                        sh 'ls'
                         junit 'project_cppcheck.xml'
                         junit 'project_cpd.xml'
                         junit 'project_valgrind.xml'
