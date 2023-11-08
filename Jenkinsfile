@@ -323,8 +323,8 @@ pipeline {
                     
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
-
-                    //xunit([GoogleTest(excludesPattern: '', pattern: 'reports/*.xml', stopProcessingIfError: true)])
+                    
+                    xunit([GoogleTest(excludesPattern: '', pattern: '/var/lib/jenkins/workspace/squareRoot_docker/reports/*.xml', stopProcessingIfError: true)])
 
 
                     /*post {         
