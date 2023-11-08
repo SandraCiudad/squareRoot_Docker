@@ -293,7 +293,13 @@ pipeline {
         
         stage('Reports') {
             
-            
+            agent {
+                docker { 
+                    image env.ANALYSIS_DOCKER_IMAGE         
+                    args env.DOCKER_ARGS
+                    reuseNode true
+                }
+            }
 
             steps {
 
@@ -324,6 +330,7 @@ pipeline {
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/project_cpd.xml'])
                     dir('/var/lib/jenkins/workspace/squareRoot_docker/reports'){
+                        sh 'ls'
                         xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                     }
                     
