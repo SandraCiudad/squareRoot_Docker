@@ -333,9 +333,7 @@ pipeline {
                             transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(html))
                         }
                         */
-                        def xml= readFile("project_cppcheck.xml")
-                        def html = new FileOutputStream("cppcjeck.html")
-                        transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(html))
+                        xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
                     }
                     
 
