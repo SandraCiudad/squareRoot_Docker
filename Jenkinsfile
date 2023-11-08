@@ -267,7 +267,12 @@ pipeline {
                         //sh '''./executeTests --gtest_output=xml'''
                     }
                 
-
+                    dir("/reports"){
+                        sh 'ls'
+                        junit 'project_cppcheck.xml'
+                        junit 'project_cpd.xml'
+                        junit 'project_valgrind.xml'
+                    }
                     /*dir("${env.WORKSPACE}.") 
                     {
                         dir('build'){
@@ -295,12 +300,7 @@ pipeline {
                 dir("${env.WORKSPACE}") {
 
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
-                    dir("/reports"){
-                        sh 'ls'
-                        junit 'project_cppcheck.xml'
-                        junit 'project_cpd.xml'
-                        junit 'project_valgrind.xml'
-                    }
+                    
 
                     //recordIssues(enabledForFailure: true, tool: cpd(pattern: "reports/project_cpd.xml"))
 
