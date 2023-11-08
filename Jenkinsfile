@@ -326,11 +326,24 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
 
+                    dir("${env.WORKSPACE}/reports"){
+                        /*def xmlToHtml(xslt, xml) {
+                            def transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new StringReader(xslt)))
+                            def html = new FileOutputStream("cppcheck.html")
+                            transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(html))
+                        }
+                        */
+                        def xml= readFile("project_cppcheck.xml")
+                        def html = new FileOutputStream("cppcjeck.html")
+                        transformer.transform(new StreamSource(new StringReader(xml)), new StreamResult(html))
+                    }
+                    
+
                     publishHTML([allowMissing: false, 
                                 alwaysLinkToLastBuild: true, 
                                 keepAll: true, 
                                 reportDir: 'reports/', 
-                                reportFiles: 'project_cppcheck.xml', 
+                                reportFiles: 'cppcjeck.html', 
                                 reportName: 'CPP CHECK Report', 
                                 reportTitles: 'CPP CHECK Report'])
                     
