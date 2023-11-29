@@ -156,10 +156,10 @@ pipeline {
                     
 
                     //step([$class: 'JUnitResultArchiver', testResults: 'reports/*.xml'])
-                    /*dir('/var/lib/jenkins/workspace/squareRoot_docker/workspace/squareRoot_docker/reports'){
+                    dir("${env.WORKSPACE}/reports"){
                         sh 'ls'
                         xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                    }*/
+                    }
                 
                     /*post {         
                         always {             
@@ -176,12 +176,9 @@ pipeline {
                     }*/
                     
                 }
+
+
                 dir("${env.WORKSPACE}/reports") {
-                    sh 'ls'
-                }
-
-
-                /*dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -196,7 +193,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }*/
+                }
 
 
             }
