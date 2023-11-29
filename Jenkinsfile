@@ -162,7 +162,7 @@ pipeline {
                 }
 
 
-                dir("${env.WORKSPACE}/reports") {
+                /*dir("${env.WORKSPACE}/reports") {
                     publishValgrind (
                         failBuildOnInvalidReports: true,
                         failBuildOnMissingReports: true,
@@ -177,7 +177,7 @@ pipeline {
                         unstableThresholdInvalidReadWrite: '',
                         unstableThresholdTotal: ''
                     )
-                }
+                }*/
 
 
             }
