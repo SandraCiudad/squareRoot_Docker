@@ -132,7 +132,7 @@ pipeline {
             steps {
 
                 dir("${env.WORKSPACE}") {
-
+                    
                     //publishCppcheck pattern: "reports/project_cppcheck.xml"
                     
 
@@ -175,6 +175,9 @@ pipeline {
                             }     
                     }*/
                     
+                }
+                dir("${env.WORKSPACE}/reports") {
+                    sh 'ls'
                 }
 
 
