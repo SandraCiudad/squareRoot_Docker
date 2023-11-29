@@ -155,13 +155,9 @@ pipeline {
                                 reportTitles: 'Doxygen Report'])
                     
 
-                    //step([$class: 'JUnitResultArchiver', testResults: 'reports/*.xml'])
-                    dir("${env.WORKSPACE}/reports"){
-                        sh 'ls'
-                        xunit([GoogleTest(excludesPattern: '', pattern: '*.xml', stopProcessingIfError: true)])
-                    }
+                    
                 
-                    /*post {         
+                    post {         
                         always {             
                             // Publica el archivo XML como informe HTML             
                             publishHTML(target: [                 
@@ -173,7 +169,7 @@ pipeline {
                                 reportName: 'CPD Report'             
                                 ])         
                             }     
-                    }*/
+                    }
                     
                 }
 
