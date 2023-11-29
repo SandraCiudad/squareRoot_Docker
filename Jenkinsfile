@@ -157,19 +157,7 @@ pipeline {
 
                     
                 
-                    post {         
-                        always {             
-                            // Publica el archivo XML como informe HTML             
-                            publishHTML(target: [                 
-                                allowMissing: false,                 
-                                alwaysLinkToLastBuild: false,                 
-                                keepAll: true,                 
-                                reportDir: 'reports',                 
-                                reportFiles: '',                 
-                                reportName: 'CPD Report'             
-                                ])         
-                            }     
-                    }
+                    
                     
                 }
 
@@ -197,6 +185,18 @@ pipeline {
         } 
 
     }
-
+    post {         
+        always {             
+            // Publica el archivo XML como informe HTML             
+            publishHTML(target: [                 
+                allowMissing: false,                 
+                alwaysLinkToLastBuild: false,                 
+                keepAll: true,                 
+                reportDir: 'reports',                 
+                reportFiles: '',                 
+                reportName: 'CPD Report'             
+                ])         
+            }     
+    }
 
 }
