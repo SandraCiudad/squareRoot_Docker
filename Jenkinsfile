@@ -153,6 +153,11 @@ pipeline {
                                 reportFiles: 'index.html', 
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
+
+
+                    junit 'build/test_detail.xml'
+                    
+            
                     
                 }
             }
@@ -161,7 +166,8 @@ pipeline {
 
     }
     post {         
-        always {             
+        always {     
+
             // Publica el archivo XML como informe HTML             
             publishHTML(target: [                 
                 allowMissing: false,                 
