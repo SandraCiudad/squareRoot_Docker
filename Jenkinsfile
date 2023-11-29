@@ -154,32 +154,7 @@ pipeline {
                                 reportName: 'Doxygen Report', 
                                 reportTitles: 'Doxygen Report'])
                     
-
-                    
-                
-                    
-                    
                 }
-
-
-                /*dir("${env.WORKSPACE}/reports") {
-                    publishValgrind (
-                        failBuildOnInvalidReports: true,
-                        failBuildOnMissingReports: true,
-                        failThresholdDefinitelyLost: '',
-                        failThresholdInvalidReadWrite: '',
-                        failThresholdTotal: '',
-                        pattern: '*valgrind.xml',
-                        publishResultsForAbortedBuilds: true,
-                        publishResultsForFailedBuilds: true,
-                        sourceSubstitutionPaths: '',
-                        unstableThresholdDefinitelyLost: '',
-                        unstableThresholdInvalidReadWrite: '',
-                        unstableThresholdTotal: ''
-                    )
-                }*/
-
-
             }
 
         } 
@@ -193,10 +168,29 @@ pipeline {
                 alwaysLinkToLastBuild: false,                 
                 keepAll: true,                 
                 reportDir: 'reports',                 
-                reportFiles: '',                 
-                reportName: 'CPD Report'             
-                ])         
-            }     
+                reportFiles: 'project_cpd.xml',                 
+                reportName: 'CPP Report'             
+            ])         
+            
+
+            publishHTML(target: [                 
+                allowMissing: false,                 
+                alwaysLinkToLastBuild: false,                 
+                keepAll: true,                 
+                reportDir: 'reports',                 
+                reportFiles: 'project_cppcheck.xml',                 
+                reportName: 'Cpp Check Report'             
+            ])         
+
+            publishHTML(target: [                 
+                allowMissing: false,                 
+                alwaysLinkToLastBuild: false,                 
+                keepAll: true,                 
+                reportDir: 'reports',                 
+                reportFiles: 'project_valgrind.xml',                 
+                reportName: 'Valgrind Report'             
+            ])         
+        } 
     }
 
 }
